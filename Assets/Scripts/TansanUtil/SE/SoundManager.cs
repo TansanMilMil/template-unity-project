@@ -11,7 +11,7 @@ namespace TansanMilMil.Util
     {
         [SerializeField] private AudioMixer soundAudioMixer;
         public AudioSource audioSource;
-        public const string MixerSE = "Master";
+        public const string MixerSE = "MasterVolume";
         public const float MaxVolume = 0;
         public const float MinVolume = -40;
         private const float AudioMixerMinVolume = -80;

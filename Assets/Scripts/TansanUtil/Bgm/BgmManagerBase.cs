@@ -20,7 +20,7 @@ namespace TansanMilMil.Util
         private float maxVolume = 1;
         private TweenerCore<float, float, FloatOptions> fadeIn;
         private TweenerCore<float, float, FloatOptions> fadeOut;
-        public const string MixerBGM = "Master";
+        public const string MixerBGM = "MasterVolume";
         public const float MaxVolume = 0;
         public const float MinVolume = -40;
         private const float AudioMixerMinVolume = -80;

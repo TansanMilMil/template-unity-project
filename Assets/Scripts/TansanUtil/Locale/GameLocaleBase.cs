@@ -29,7 +29,7 @@ namespace TansanMilMil.Util
                 return instanceCache;
             }
 
-            instanceCache = FindFirstObjectByType<GameLocaleBase>();
+            instanceCache = FindAnyObjectByType<GameLocaleBase>();
             if (instanceCache == null)
             {
                 throw new Exception("GameLocaleBase instance is not found!");

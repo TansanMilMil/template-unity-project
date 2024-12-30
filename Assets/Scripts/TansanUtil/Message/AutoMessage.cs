@@ -31,7 +31,7 @@ namespace TansanMilMil.Util
 
         private async UniTask MessagesAsync(string messageKey)
         {
-            string localeTexts = await GameLocale.GetEntryValueReplacedAsync(new LocaleString(messageKey, tableReference));
+            string localeTexts = await GameLocaleBase.GetInstanceOnCurrentScene().GetEntryValueReplacedAsync(new LocaleString(messageKey, tableReference));
             await WriteMessageAsync(localeTexts);
         }
 

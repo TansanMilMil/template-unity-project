@@ -9,80 +9,67 @@ using UnityEngine.Localization.Settings;
 namespace TansanMilMil.Util
 {
     [DefaultExecutionOrder(-10)]
-    public class GameLocale : MonoBehaviour
+    public class GameLocale : GameLocaleBase
     {
-        public static bool Initialized = false;
-        // public static Locale ENUS { get; private set; }
-        public static Locale JAJP { get; private set; }
-        public readonly static Locale DefaultLocale = JAJP;
-        private static MessageTextReplacer messageTextReplacer = new MessageTextReplacer(new MessageTextReplacerLogic());
-
-        private void Awake()
-        {
-            if (Initialized) return;
-
-            InitAsync().Forget();
-        }
-
-        private async UniTask InitAsync()
+        protected override async UniTask InitializeAvailableLocalesAsync()
         {
             await UniTask.WaitUntil(() => LocalizationSettings.InitializationOperation.IsDone);
-            // ENUS = GetLocale(CultureInfoName.EN_US);
-            JAJP = GetLocale(CultureInfoName.JA_JP);
 
+            AvailableLocales.Initialize(
+                GetLocale(CultureInfoName.EN_US),
+                GetLocale(CultureInfoName.JA_JP)
+            );
+        }
+
+        protected override void LoadLocaleFromConfigSaveData()
+        {
             ConfigSaveDataManager.GetInstance().LoadIfRequired();
-            SetLocale(PlayerConfigManager.GetInstance().GetConfig().cultureInfoName);
+        }
 
+        protected override void SetLocaleFromConfigSaveData()
+        {
+            SetLocale(PlayerConfigManager.GetInstance().GetConfig().cultureInfoName);
+        }
+
+        protected override void SetLocaleToConfig()
+        {
             PlayerConfig config = PlayerConfigManager.GetInstance().GetConfig();
             config.cultureInfoName = GetCurrentCultureInfoName();
             PlayerConfigManager.GetInstance().SetConfig(config);
-
-            Initialized = true;
-            this.gameObject.SetActive(false);
         }
 
-        private static Locale GetLocale(string cultureInfoName)
+        protected override Locale GetLocale(string cultureInfoName)
         {
             return LocalizationSettings.AvailableLocales.Locales.Find(locale => locale.Identifier.CultureInfo.Name == cultureInfoName);
         }
 
-        private static Locale GetCurrentLocale()
+        protected override Locale GetCurrentLocale()
         {
             return LocalizationSettings.SelectedLocale;
         }
 
-        private static void SetLocale(Locale locale)
+        protected override void SetLocale(Locale locale)
         {
             LocalizationSettings.SelectedLocale = locale;
         }
 
-        public static void SetLocale(string cultureInfoName)
+        public override void SetLocale(string cultureInfoName)
         {
             Locale locale = GetLocale(cultureInfoName);
             if (locale == null)
             {
-                Debug.LogError($"Could not find a locale has cultureInfo << {cultureInfoName} >>. Thus fallback to DefaultLocale {DefaultLocale?.name}.");
-                LocalizationSettings.SelectedLocale = DefaultLocale;
+                Debug.LogError($"Could not find a locale has cultureInfo << {cultureInfoName} >>. Thus fallback to DefaultLocale {LocaleSettings.DefaultLocale?.name}.");
+                LocalizationSettings.SelectedLocale = LocaleSettings.DefaultLocale;
                 return;
             }
             LocalizationSettings.SelectedLocale = locale;
             Debug.Log($"set locale -> {GetCurrentCultureInfoName()}");
         }
 
-        private static string GetCultureInfoName(Locale locale)
-        {
-            return locale.Identifier.CultureInfo.Name;
-        }
-
-        private static string GetCurrentCultureInfoName()
-        {
-            return GetCultureInfoName(LocalizationSettings.SelectedLocale);
-        }
-
         /// <summary>
         /// 改行コードを画面上に反映させたい場合は<see cref="GetEntryValueReplacedAsync"/>を使用してください。
         /// </summary>
-        public static async UniTask<string> GetEntryValueAsync(string entryName, string tableReference)
+        public override async UniTask<string> GetEntryValueAsync(string entryName, string tableReference)
         {
             if (string.IsNullOrWhiteSpace(entryName)) return "";
             if (string.IsNullOrWhiteSpace(tableReference)) throw new Exception("tableReference is null or whiteSpace!");
@@ -96,21 +83,6 @@ namespace TansanMilMil.Util
                 return "";
             }
             return e.Entry.Value;
-        }
-
-        public static async UniTask<string> GetEntryValueReplacedAsync(LocaleString localeString)
-        {
-            if (localeString == null) return "";
-
-            string str = await GetEntryValueAsync(localeString.key, localeString.tableReference.ToString());
-            str = localeString.ReplaceTextByRegex(str);
-            return messageTextReplacer.Replace(str);
-        }
-
-        public static async UniTask<string> GetEntryValueReplacedAsync(string key, string tableReference)
-        {
-            string str = await GetEntryValueAsync(key, tableReference);
-            return messageTextReplacer.Replace(str);
         }
     }
 }

@@ -40,8 +40,8 @@ namespace TansanMilMil.Util
             int autoMessageWaitMSec = 0)
         {
 
-            string localeTexts = await GameLocale.GetEntryValueReplacedAsync(texts);
-            string localeTalkerName = await GameLocale.GetEntryValueReplacedAsync(talkerName);
+            string localeTexts = await GameLocaleBase.GetInstanceOnCurrentScene().GetEntryValueReplacedAsync(texts);
+            string localeTalkerName = await GameLocaleBase.GetInstanceOnCurrentScene().GetEntryValueReplacedAsync(talkerName);
 
             List<string> localeChoices = new List<string>();
             if (choices != null)
@@ -54,7 +54,7 @@ namespace TansanMilMil.Util
                     }
                     else
                     {
-                        string localeChoice = await GameLocale.GetEntryValueReplacedAsync(choice);
+                        string localeChoice = await GameLocaleBase.GetInstanceOnCurrentScene().GetEntryValueReplacedAsync(choice);
                         localeChoices.Add(localeChoice);
                     }
                 }

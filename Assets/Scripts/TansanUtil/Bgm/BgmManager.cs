@@ -19,7 +19,7 @@ namespace TansanMilMil.Util
         private static GameObject Instance;
         private static BgmManager InstanceComponent;
         public static float TimeBeforeMovingScene = 0;
-        private static AddressablesKeeper<AudioClip> AudioKeeper = new AddressablesKeeper<AudioClip>(autoRelease: true);
+        private static AssetsKeeper<AudioClip> AudioKeeper = AssetsTypeSettings.NewAssetsKeeper<AudioClip>(autoRelease: true);
 
         private BgmManager() { }
 

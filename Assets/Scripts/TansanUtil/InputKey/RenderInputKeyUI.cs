@@ -17,7 +17,7 @@ namespace TansanMilMil.Util
         [SerializeField] private Image inputKeyImage;
         [SerializeField] private InputKeyBindConditions bindConditions = InputKeyBindConditions.All;
         // 基本的にゲーム中ずっと必要なSpriteを保持するはずなので SpriteKeeper.ReleaseAllAssets() はしない。メモリの問題が出てきたら要検討。
-        private static AddressablesKeeper<Sprite> SpriteKeeper = new AddressablesKeeper<Sprite>();
+        private static AssetsKeeper<Sprite> SpriteKeeper = AssetsTypeSettings.NewAssetsKeeper<Sprite>();
 
         private void Start()
         {

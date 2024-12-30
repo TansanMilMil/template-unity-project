@@ -6,9 +6,9 @@ namespace TansanMilMil.Util
     {
         public string pathName { get; private set; }
         public T asset { get; private set; }
-        public AsyncOperationHandle<T> handle { get; private set; }
+        public AsyncOperationHandle<T>? handle { get; private set; }
 
-        public AddressablesKeeperItem(string pathName, T asset, AsyncOperationHandle<T> handle)
+        public AddressablesKeeperItem(string pathName, T asset, AsyncOperationHandle<T>? handle)
         {
             this.pathName = pathName;
             this.asset = asset;

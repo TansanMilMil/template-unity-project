@@ -16,3 +16,4 @@
 - Install below packages
   - DOTween Pro
   - Rainbow Folders 2
+  - Text Animator for Unity

@@ -37,6 +37,12 @@
       "dependencies": {},
       "hash": "2ceddb2c35c88f069bbd8927b949a3d4eadb4e58"
     },
+    "com.tansanmilmil.tansanmilmilutil": {
+      "version": "file:TansanMilMilUtil",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.2d.animation": {
       "version": "11.0.0",
       "depth": 1,

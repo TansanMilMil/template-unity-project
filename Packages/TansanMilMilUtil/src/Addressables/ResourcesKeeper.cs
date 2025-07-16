@@ -18,7 +18,10 @@ namespace TansanMilMil.Util
         public override void ReleaseAsset(string pathName)
         {
             var cache = caches.Find(c => c.pathName == pathName);
-            caches.Remove(cache);
+            if (cache != null)
+            {
+                caches.Remove(cache);
+            }
         }
 
         public override void ReleaseAllAssets()
@@ -28,7 +31,10 @@ namespace TansanMilMil.Util
 
         public override void ReleaseEndOfAsset(List<AddressablesKeeperItem<T>> caches)
         {
-            caches.RemoveAt(caches.Count - 1);
+            if (caches.Count > 0)
+            {
+                caches.RemoveAt(caches.Count - 1);
+            }
         }
     }
 }

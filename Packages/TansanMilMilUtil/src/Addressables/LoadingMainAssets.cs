@@ -47,7 +47,7 @@ namespace TansanMilMil.Util
             }
             else
             {
-                funcAfterLoading.Invoke();
+                funcAfterLoading?.Invoke();
             }
 
         }

@@ -6,13 +6,24 @@ namespace TansanMilMil.Util
 {
     public class AddressablesWrapper<T> : IAddressablesWrapper<T>
     {
-        private static AddressablesWrapper<T> Instance = new AddressablesWrapper<T>();
+        private static readonly object lockObject = new object();
+        private static AddressablesWrapper<T> instance;
 
         private AddressablesWrapper() { }
 
         public static AddressablesWrapper<T> GetInstance()
         {
-            return Instance;
+            if (instance == null)
+            {
+                lock (lockObject)
+                {
+                    if (instance == null)
+                    {
+                        instance = new AddressablesWrapper<T>();
+                    }
+                }
+            }
+            return instance;
         }
 
         public AsyncOperationHandle<T> LoadAssetAsync(string pathName)
@@ -31,15 +42,26 @@ namespace TansanMilMil.Util
         }
     }
 
-    public class AddressablesWrapper : IAddressablesWrapper
+    public class AddressablesWrapper : IAddressablesDownloader
     {
-        private static AddressablesWrapper Instance = new AddressablesWrapper();
+        private static readonly object lockObject = new object();
+        private static AddressablesWrapper instance;
 
         private AddressablesWrapper() { }
 
         public static AddressablesWrapper GetInstance()
         {
-            return Instance;
+            if (instance == null)
+            {
+                lock (lockObject)
+                {
+                    if (instance == null)
+                    {
+                        instance = new AddressablesWrapper();
+                    }
+                }
+            }
+            return instance;
         }
 
         public async UniTask DownloadDependenciesAsync(object key, bool autoReleaseHandle = false)

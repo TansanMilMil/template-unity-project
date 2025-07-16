@@ -5,15 +5,13 @@ namespace TansanMilMil.Util
 {
     public interface IAddressablesWrapper<T>
     {
-        public AsyncOperationHandle<T> LoadAssetAsync(string pathName);
-
-        public void Release(AsyncOperationHandle opHandle);
-
-        public UniTask<T> AwaitHandle(AsyncOperationHandle<T> handle);
+        AsyncOperationHandle<T> LoadAssetAsync(string pathName);
+        void Release(AsyncOperationHandle opHandle);
+        UniTask<T> AwaitHandle(AsyncOperationHandle<T> handle);
     }
 
-    public interface IAddressablesWrapper
+    public interface IAddressablesDownloader
     {
-        public UniTask DownloadDependenciesAsync(object key, bool autoReleaseHandle = false);
+        UniTask DownloadDependenciesAsync(object key, bool autoReleaseHandle = false);
     }
 }

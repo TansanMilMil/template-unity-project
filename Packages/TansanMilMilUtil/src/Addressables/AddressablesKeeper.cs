@@ -34,8 +34,11 @@ namespace TansanMilMil.Util
         public override void ReleaseAsset(string pathName)
         {
             var cache = caches.Find(c => c.pathName == pathName);
-            addressablesWrapper.Release((AsyncOperationHandle<T>)cache.handle);
-            caches.Remove(cache);
+            if (cache != null)
+            {
+                addressablesWrapper.Release((AsyncOperationHandle<T>)cache.handle);
+                caches.Remove(cache);
+            }
         }
 
         public override void ReleaseAllAssets()
@@ -49,8 +52,11 @@ namespace TansanMilMil.Util
 
         public override void ReleaseEndOfAsset(List<AddressablesKeeperItem<T>> caches)
         {
-            addressablesWrapper.Release((AsyncOperationHandle<T>)caches[caches.Count - 1].handle);
-            caches.RemoveAt(caches.Count - 1);
+            if (caches.Count > 0)
+            {
+                addressablesWrapper.Release((AsyncOperationHandle<T>)caches[caches.Count - 1].handle);
+                caches.RemoveAt(caches.Count - 1);
+            }
         }
     }
 }

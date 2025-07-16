@@ -6,7 +6,6 @@ namespace TansanMilMil.Util
     {
         private const bool CanUseLocalization = false;
         public readonly static Locale DefaultLocale = AvailableLocales.JAJP;
-        public static MessageTextReplacer MessageTextReplacer = new MessageTextReplacer(new MessageTextReplacerLogic());
         public static bool CanUseLocale => CanUseLocalization;
     }
 }

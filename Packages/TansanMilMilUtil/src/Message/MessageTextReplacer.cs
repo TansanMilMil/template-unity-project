@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace TansanMilMil.Util
 {
@@ -6,28 +7,20 @@ namespace TansanMilMil.Util
     {
         public event Func<string, string> replaceText;
 
-        public MessageTextReplacer(IMessageTextReplacerLogic replacerLogic)
+        public MessageTextReplacer(List<TextReplaceStrategy> strategies)
         {
-            replaceText += replacerLogic.ReplaceText;
+            foreach (var strategy in strategies)
+            {
+                replaceText += strategy.Replace;
+            }
         }
 
         public string Replace(string text)
         {
-            if (string.IsNullOrWhiteSpace(text)) return "";
+            if (string.IsNullOrWhiteSpace(text) || replaceText == null)
+                return "";
 
-            text = ReplaceBackSlashNToNewLine(text);
             text = replaceText.Invoke(text);
-
-            return text;
-        }
-
-        private string ReplaceBackSlashNToNewLine(string text)
-        {
-            string backSlashNPattern = @"\n";
-            if (text.Contains(backSlashNPattern))
-            {
-                text = text.Replace(backSlashNPattern, Environment.NewLine);
-            }
 
             return text;
         }

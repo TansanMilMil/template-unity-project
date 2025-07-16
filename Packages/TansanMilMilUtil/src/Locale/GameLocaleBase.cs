@@ -17,7 +17,8 @@ namespace TansanMilMil.Util
 
         private void Awake()
         {
-            if (Initialized) return;
+            if (Initialized)
+                return;
 
             InitAsync().Forget();
         }
@@ -82,17 +83,16 @@ namespace TansanMilMil.Util
 
         public async UniTask<string> GetEntryValueReplacedAsync(LocaleString localeString)
         {
-            if (localeString == null) return "";
+            if (localeString == null)
+                return "";
 
             string str = await GetEntryValueAsync(localeString.key, localeString.tableReference.ToString());
-            str = localeString.ReplaceTextByRegex(str);
-            return LocaleSettings.MessageTextReplacer.Replace(str);
+            return localeString.ReplaceTextByRegex(str);
         }
 
         public async UniTask<string> GetEntryValueReplacedAsync(string key, string tableReference)
         {
-            string str = await GetEntryValueAsync(key, tableReference);
-            return LocaleSettings.MessageTextReplacer.Replace(str);
+            return await GetEntryValueAsync(key, tableReference);
         }
     }
 }

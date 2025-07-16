@@ -23,7 +23,8 @@ namespace TansanMilMil.Util
 
         public string ReplaceTextByRegex(string text)
         {
-            if (regexList == null) return text;
+            if (regexList == null)
+                return text;
             foreach (KeyValuePair<Regex, string> regex in regexList)
             {
                 text = regex.Key.Replace(text, regex.Value);

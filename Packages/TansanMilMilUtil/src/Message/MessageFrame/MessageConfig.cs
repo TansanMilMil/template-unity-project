@@ -9,12 +9,14 @@ namespace TansanMilMil.Util
         {
             Default = 0,
         }
-
         public float displayTimeUntilHide { get; set; } = InfiniteTime;
+        public bool noClose { get; set; } = false;
         public int textSoundIntervalMS { get; set; } = 200;
         public AudioClip textSound { get; set; }
         public Vector3? frameCanvasPos { get; set; }
         public MessageFrameStyle frameStyle { get; set; } = MessageFrameStyle.Default;
         public MessageFrameStyle choicesFrameStyle { get; set; } = MessageFrameStyle.Default;
+
+        public bool IsInfiniteDisplayTimeUntilHide => displayTimeUntilHide == InfiniteTime;
     }
 }

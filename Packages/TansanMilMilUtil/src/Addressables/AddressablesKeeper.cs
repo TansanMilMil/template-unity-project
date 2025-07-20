@@ -52,10 +52,11 @@ namespace TansanMilMil.Util
 
         public override void ReleaseEndOfAsset(List<AddressablesKeeperItem<T>> caches)
         {
-            if (caches.Count > 0)
+            if (caches != null && caches.Count > 0)
             {
-                addressablesWrapper.Release((AsyncOperationHandle<T>)caches[caches.Count - 1].handle);
-                caches.RemoveAt(caches.Count - 1);
+                int lastIndex = caches.Count - 1;
+                addressablesWrapper.Release((AsyncOperationHandle<T>)caches[lastIndex].handle);
+                caches.RemoveAt(lastIndex);
             }
         }
     }

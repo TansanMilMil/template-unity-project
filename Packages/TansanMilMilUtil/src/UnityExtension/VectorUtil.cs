@@ -8,6 +8,10 @@ namespace TansanMilMil.Util
         {
             Vector3 heading = pos1 - pos2;
             float distance = heading.magnitude;
+            if (distance <= 0)
+            {
+                return Vector3.zero;
+            }
             return heading / distance;
         }
 
@@ -33,6 +37,10 @@ namespace TansanMilMil.Util
 
         public static Vector3 ParseVector(float[] f)
         {
+            if (f == null || f.Length < 3)
+            {
+                return Vector3.zero;
+            }
             return new Vector3(f[0], f[1], f[2]);
         }
     }

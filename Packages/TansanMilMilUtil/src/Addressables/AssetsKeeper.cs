@@ -81,6 +81,6 @@ namespace TansanMilMil.Util
             }
         }
 
-        public abstract void ReleaseEndOfAsset(List<AddressablesKeeperItem<T>> caches);
+        public abstract void ReleaseEndOfAsset(IList<AddressablesKeeperItem<T>> caches);
     }
 }

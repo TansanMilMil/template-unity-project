@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using System;
 using UnityEngine;
 
 namespace TansanMilMil.Util
@@ -16,10 +18,10 @@ namespace TansanMilMil.Util
         /// キャッシュ量が閾値を超えた場合、古いキャッシュ順に削除する
         /// メモリリークを防ぐために使ってね
         /// </summary>
-        public List<GameObjectCache> VacuumObjectCaches(List<GameObjectCache> objectCaches)
+        public List<GameObjectCache> VacuumObjectCaches(IList<GameObjectCache> objectCaches)
         {
             // Vacuum対象だけをListに抽出
-            List<GameObjectCache> vacuumObjectCaches = objectCaches.FindAll(x => x.vacuumable);
+            List<GameObjectCache> vacuumObjectCaches = objectCaches.Where(x => x.vacuumable).ToList();
 
             // キャッシュ量が増えすぎたら、古いものからフラグ(reserveVacuum)をtrueにして削除する
             if (vacuumObjectCaches.Count > MaxObjectCacheCount)
@@ -29,24 +31,24 @@ namespace TansanMilMil.Util
                     vacuumObjectCaches[i].SetReserveVacuum(true);
                 }
             }
-            vacuumedObjectCount += objectCaches.RemoveAll(x => x.reserveVacuum);
+            vacuumedObjectCount += RemoveAllFromList(objectCaches, x => x.reserveVacuum);
 
             // DestroyされたGameObjectやComponentのキャッシュも削除する
-            vacuumedObjectCount += objectCaches.RemoveAll(x => x.vacuumable && x.gameObject == null);
+            vacuumedObjectCount += RemoveAllFromList(objectCaches, x => x.vacuumable && x.gameObject == null);
 
             WarnTooManyVacuumCount();
 
-            return objectCaches;
+            return objectCaches as List<GameObjectCache> ?? objectCaches.ToList();
         }
 
         /// <summary>
         /// キャッシュ量が閾値を超えた場合、古いキャッシュ順に削除する
         /// メモリリークを防ぐために使ってね
         /// </summary>
-        public List<ComponentCache> VacuumComponentCaches(List<ComponentCache> componentCaches)
+        public List<ComponentCache> VacuumComponentCaches(IList<ComponentCache> componentCaches)
         {
             // Vacuum対象だけをListに抽出
-            List<ComponentCache> vacuumComponentCaches = componentCaches.FindAll(x => x.vacuumable);
+            List<ComponentCache> vacuumComponentCaches = componentCaches.Where(x => x.vacuumable).ToList();
 
             // キャッシュ量が増えすぎたら、古いものからフラグ(reserveVacuum)をtrueにして削除する
             if (vacuumComponentCaches.Count > MaxComponentCacheCount)
@@ -56,14 +58,14 @@ namespace TansanMilMil.Util
                     vacuumComponentCaches[i].SetReserveVacuum(true);
                 }
             }
-            vacuumedComponentCount += componentCaches.RemoveAll(x => x.reserveVacuum);
+            vacuumedComponentCount += RemoveAllFromList(componentCaches, x => x.reserveVacuum);
 
             // DestroyされたGameObjectやComponentのキャッシュも削除する
-            vacuumedComponentCount += componentCaches.RemoveAll(x => x.vacuumable && x.component == null);
+            vacuumedComponentCount += RemoveAllFromList(componentCaches, x => x.vacuumable && x.component == null);
 
             WarnTooManyVacuumCount();
 
-            return componentCaches;
+            return componentCaches as List<ComponentCache> ?? componentCaches.ToList();
         }
 
         public bool IsVacuumable<T>(T component)
@@ -91,6 +93,20 @@ namespace TansanMilMil.Util
                 Debug.LogWarning("VacuumedComponentCount is over " + WarnVacuumedComponentCount + "!");
                 vacuumedComponentCount = 0;
             }
+        }
+
+        private int RemoveAllFromList<T>(IList<T> list, Func<T, bool> match)
+        {
+            int removedCount = 0;
+            for (int i = list.Count - 1; i >= 0; i--)
+            {
+                if (match(list[i]))
+                {
+                    list.RemoveAt(i);
+                    removedCount++;
+                }
+            }
+            return removedCount;
         }
     }
 }

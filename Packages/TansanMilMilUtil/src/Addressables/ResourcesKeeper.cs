@@ -29,7 +29,7 @@ namespace TansanMilMil.Util
             caches.Clear();
         }
 
-        public override void ReleaseEndOfAsset(List<AddressablesKeeperItem<T>> caches)
+        public override void ReleaseEndOfAsset(IList<AddressablesKeeperItem<T>> caches)
         {
             if (caches.Count > 0)
             {

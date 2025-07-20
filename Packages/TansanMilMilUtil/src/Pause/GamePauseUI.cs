@@ -16,7 +16,7 @@ namespace TansanMilMil.Util
 
         private void SetInitSubscriber()
         {
-            gamePause.onPaused
+            gamePause.OnPaused
                 .Subscribe(isPaused =>
                 {
                     pauseObjects.SetActive(isPaused);

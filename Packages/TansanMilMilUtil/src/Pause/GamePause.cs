@@ -8,7 +8,8 @@ namespace TansanMilMil.Util
 {
     public class GamePause : SingletonMonoBehaviour<GamePause>
     {
-        public BehaviorSubject<bool> onPaused = new BehaviorSubject<bool>(false);
+        private BehaviorSubject<bool> _onPaused = new BehaviorSubject<bool>(false);
+        public Observable<bool> OnPaused => _onPaused;
         [SerializeField] private AudioMixer bgmAudioMixer;
         private float bgmAudioMixerVolume = 0;
         [SerializeField] private AudioMixer soundAudioMixer;
@@ -30,11 +31,11 @@ namespace TansanMilMil.Util
                 .Where(_ => InputKeys.GetInstance().AnyInputGetKeyDown(KeyRole.Pause))
                 .Subscribe(_ =>
                 {
-                    onPaused.OnNext(!onPaused.Value);
+                    _onPaused.OnNext(!_onPaused.Value);
                 })
                 .AddTo(this.GetCancellationTokenOnDestroy());
 
-            onPaused
+            _onPaused
                 .Skip(1)
                 .Subscribe(paused =>
                 {

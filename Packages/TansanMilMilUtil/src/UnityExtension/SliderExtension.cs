@@ -1,3 +1,4 @@
+using System;
 using R3;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -12,17 +13,19 @@ namespace TansanMilMil.Util
     public class SliderExtension : MonoBehaviour, IEndDragHandler, IBeginDragHandler
     {
         public Slider slider;
-        public Subject<bool> onEndDrag = new Subject<bool>();
-        public Subject<bool> onBeginDrag = new Subject<bool>();
+        private Subject<bool> _onStopDrag = new Subject<bool>();
+        public Observable<bool> OnStopDrag => _onStopDrag;
+        private Subject<bool> _onStartDrag = new Subject<bool>();
+        public Observable<bool> OnStartDrag => _onStartDrag;
 
         public void OnEndDrag(PointerEventData data)
         {
-            onEndDrag.OnNext(true);
+            _onStopDrag.OnNext(true);
         }
 
         public void OnBeginDrag(PointerEventData data)
         {
-            onBeginDrag.OnNext(true);
+            _onStartDrag.OnNext(true);
         }
     }
 }

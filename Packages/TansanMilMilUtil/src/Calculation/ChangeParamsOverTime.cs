@@ -11,7 +11,8 @@ namespace TansanMilMil.Util
     /// </summary>
     public class ChangeParamsOverTime
     {
-        public Subject<float> valueChanged = new();
+        private Subject<float> _valueChanged = new();
+        public Observable<float> ValueChanged => _valueChanged;
         private float targetValue = 0;
         private float currentValue = 0;
         private float changeSpeed = 3;
@@ -21,7 +22,8 @@ namespace TansanMilMil.Util
         {
             this.currentValue = targetValue;
             SetTargetValue(targetValue);
-            if (changeSpeed != 0) this.changeSpeed = changeSpeed;
+            if (changeSpeed != 0)
+                this.changeSpeed = changeSpeed;
 
             // targetValueとcurrentValueが同じになるまで毎フレーム変更する
             disposable = Observable.EveryUpdate()
@@ -39,7 +41,8 @@ namespace TansanMilMil.Util
 
         private void ChangeParams()
         {
-            if (currentValue == targetValue) return;
+            if (currentValue == targetValue)
+                return;
 
             if (currentValue < targetValue)
             {
@@ -49,7 +52,7 @@ namespace TansanMilMil.Util
             {
                 currentValue -= Mathf.Clamp(changeSpeed, 0, currentValue - targetValue);
             }
-            valueChanged.OnNext(currentValue);
+            _valueChanged.OnNext(currentValue);
         }
 
         public float CurrentValue()
@@ -60,7 +63,7 @@ namespace TansanMilMil.Util
         public void Dispose()
         {
             disposable.Dispose();
-            valueChanged.OnCompleted();
+            _valueChanged.OnCompleted();
         }
 
         public void SetTargetValue(float targetValue)

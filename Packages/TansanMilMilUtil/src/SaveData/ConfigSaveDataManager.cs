@@ -6,8 +6,10 @@ namespace TansanMilMil.Util
 {
     public class ConfigSaveDataManager : SingletonMonoBehaviour<ConfigSaveDataManager>
     {
-        public Subject<bool> loadCompleted = new Subject<bool>();
-        public Subject<bool> saveCompleted = new Subject<bool>();
+        private Subject<bool> _loadCompleted = new Subject<bool>();
+        private Subject<bool> _saveCompleted = new Subject<bool>();
+        public Observable<bool> LoadCompleted => _loadCompleted;
+        public Observable<bool> SaveCompleted => _saveCompleted;
         private bool loadedInit = false;
 
         public void Save()
@@ -26,7 +28,7 @@ namespace TansanMilMil.Util
 
         private void AfterSave()
         {
-            saveCompleted.OnNext(true);
+            _saveCompleted.OnNext(true);
         }
 
         protected void Load()
@@ -42,7 +44,7 @@ namespace TansanMilMil.Util
 
         private void AfterLoad()
         {
-            loadCompleted.OnNext(true);
+            _loadCompleted.OnNext(true);
         }
 
         public void LoadIfRequired()

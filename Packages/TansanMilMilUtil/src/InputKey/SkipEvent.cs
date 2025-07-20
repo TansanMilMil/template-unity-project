@@ -13,14 +13,15 @@ namespace TansanMilMil.Util
         [SerializeField] private GameObject wrapper;
         [SerializeField] private Image thresholdImage;
         private bool skipKeyDown = false;
-        public Subject<bool> onSkipEvent = new Subject<bool>();
+        private Subject<bool> _onSkipEvent = new Subject<bool>();
+        public Observable<bool> OnSkipEvent => _onSkipEvent;
         public bool observing { get; private set; } = false;
 
         private Subject<bool> StartObserve()
         {
             wrapper.SetActive(true);
             observing = true;
-            return onSkipEvent;
+            return _onSkipEvent;
         }
 
         public void StartObserveAndSubscribe(Func<UniTask> actionAsync)
@@ -31,7 +32,7 @@ namespace TansanMilMil.Util
 
         private void SubscribeSkipEvent(Func<UniTask> actionAsync)
         {
-            onSkipEvent
+            _onSkipEvent
                 .Where(_ => observing)
                 .Subscribe(async _ =>
                 {
@@ -56,14 +57,15 @@ namespace TansanMilMil.Util
 
         private void Update()
         {
-            if (!observing) return;
+            if (!observing)
+                return;
 
             if (InputKeys.GetInstance().AnyInputGetKey(KeyRole.Skip) || skipKeyDown)
             {
                 pushSkipKeyTime += Time.deltaTime;
                 if (pushSkipKeyTime > Threshold)
                 {
-                    onSkipEvent.OnNext(true);
+                    _onSkipEvent.OnNext(true);
                     pushSkipKeyTime = 0.0f;
                     StopObserve();
                 }

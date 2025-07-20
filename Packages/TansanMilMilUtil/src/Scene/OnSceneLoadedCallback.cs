@@ -9,7 +9,8 @@ namespace TansanMilMil.Util
     public class OnSceneLoadedCallback : SingletonMonoBehaviour<OnSceneLoadedCallback>
     {
         private Func<UniTask> callbackAsync;
-        public Subject<bool> onSceneChanged = new Subject<bool>();
+        private Subject<bool> _onSceneChanged = new Subject<bool>();
+        public Observable<bool> OnSceneChanged => _onSceneChanged;
 
         protected override void OnSingletonStart()
         {
@@ -32,7 +33,7 @@ namespace TansanMilMil.Util
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            onSceneChanged.OnNext(true);
+            _onSceneChanged.OnNext(true);
             DoCallbackAsync().Forget();
         }
 

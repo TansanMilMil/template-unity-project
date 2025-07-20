@@ -12,10 +12,15 @@ namespace TansanMilMil.Util
         private float initRemainSec = 0;
         private float remainSec = 0;
         private Func<GameTimer, UniTask> onTimeUpAsync = null;
-        public Subject<GameTimer> onTimeUp = new Subject<GameTimer>();
-        public BehaviorSubject<bool> onPause = new BehaviorSubject<bool>(false);
-        public Subject<float> onStart = new Subject<float>();
-        public Subject<float> timerProgress = new Subject<float>();
+        private Subject<GameTimer> _onTimeUp = new Subject<GameTimer>();
+        private BehaviorSubject<bool> _onPause = new BehaviorSubject<bool>(false);
+        private Subject<float> _onStart = new Subject<float>();
+        private Subject<float> _timerProgress = new Subject<float>();
+
+        public Observable<GameTimer> OnTimeUp => _onTimeUp;
+        public Observable<bool> OnPause => _onPause;
+        public Observable<float> OnStart => _onStart;
+        public Observable<float> TimerProgress => _timerProgress;
 
         private void Awake()
         {
@@ -26,16 +31,16 @@ namespace TansanMilMil.Util
 
         private void Update()
         {
-            if (remainSec > 0 && !onPause.Value)
+            if (remainSec > 0 && !_onPause.Value)
             {
                 remainSec -= Time.deltaTime;
                 if (remainSec <= 0)
                 {
-                    onTimeUp.OnNext(this);
+                    _onTimeUp.OnNext(this);
                 }
                 else
                 {
-                    timerProgress.OnNext(remainSec);
+                    _timerProgress.OnNext(remainSec);
                 }
             }
         }
@@ -48,14 +53,14 @@ namespace TansanMilMil.Util
 
             if (isPause)
             {
-                onPause.OnNext(true);
+                _onPause.OnNext(true);
             }
 
-            onStart.OnNext(remainSec);
+            _onStart.OnNext(remainSec);
 
             if (this.onTimeUpAsync != null)
             {
-                onTimeUp
+                _onTimeUp
                     .Subscribe(async timer => await this.onTimeUpAsync(timer))
                     .AddTo(this.GetCancellationTokenOnDestroy());
             }
@@ -63,12 +68,12 @@ namespace TansanMilMil.Util
 
         public void Pause()
         {
-            onPause.OnNext(true);
+            _onPause.OnNext(true);
         }
 
         public void UnPause()
         {
-            onPause.OnNext(false);
+            _onPause.OnNext(false);
         }
 
         public void DestroyTimer()

@@ -24,12 +24,13 @@ namespace TansanMilMil.Util
 
         private void SetInitSubscriber()
         {
-            arrowTransition.showAllBlackImage
+            arrowTransition.ShowAllBlackImage
                 .Subscribe(isShow =>
                 {
                     transition.transform.localScale = isShow ? Vector3.one : Vector3.zero;
                 })
-                .AddTo(this.GetCancellationTokenOnDestroy()); ;
+                .AddTo(this.GetCancellationTokenOnDestroy());
+            ;
         }
 
         public async UniTask FadeInAsync(float duration = 0.7f, Color? color = null)

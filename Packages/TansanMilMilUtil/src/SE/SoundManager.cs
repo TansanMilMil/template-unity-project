@@ -10,7 +10,7 @@ namespace TansanMilMil.Util
     public class SoundManager : MonoBehaviour, IIgnoreVacuumComponent
     {
         [SerializeField] private AudioMixer soundAudioMixer;
-        public AudioSource audioSource;
+        private AudioSource audioSource;
         public const string MixerSE = "MasterVolume";
         public const float MaxVolume = 0;
         public const float MinVolume = -40;

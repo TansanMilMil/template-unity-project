@@ -74,7 +74,7 @@ namespace TansanMilMil.Util
         /// <summary>
         /// Unity Awakeメソッド - シングルトンの初期化を行う
         /// </summary>
-        protected virtual void Awake()
+        private void Awake()
         {
             lock (lockObject)
             {
@@ -105,10 +105,15 @@ namespace TansanMilMil.Util
             }
         }
 
+        private void Start()
+        {
+            OnSingletonStart();
+        }
+
         /// <summary>
         /// Unity OnDestroy メソッド
         /// </summary>
-        protected virtual void OnDestroy()
+        private void OnDestroy()
         {
             if (instance == gameObject)
             {
@@ -121,7 +126,7 @@ namespace TansanMilMil.Util
         /// <summary>
         /// Unity OnApplicationQuit メソッド
         /// </summary>
-        protected virtual void OnApplicationQuit()
+        private void OnApplicationQuit()
         {
             applicationIsQuitting = true;
         }
@@ -143,6 +148,15 @@ namespace TansanMilMil.Util
         protected virtual void OnSingletonAwake()
         {
             // デフォルトは空実装
+        }
+
+        /// <summary>
+        /// シングルトンが開始された時に呼び出されるメソッド
+        /// 子クラスで独自の開始処理を実装する場合にオーバーライド
+        /// </summary>
+        protected virtual void OnSingletonStart()
+        {
+            // Startメソッドのオーバーライド用
         }
 
         /// <summary>

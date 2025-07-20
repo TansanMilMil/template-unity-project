@@ -7,7 +7,7 @@ namespace TansanMilMil.Util
     {
         public event Func<string, string> replaceText;
 
-        public MessageTextReplacer(List<TextReplaceStrategy> strategies)
+        public MessageTextReplacer(IEnumerable<TextReplaceStrategy> strategies)
         {
             foreach (var strategy in strategies)
             {

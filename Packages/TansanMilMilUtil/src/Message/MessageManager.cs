@@ -7,21 +7,12 @@ namespace TansanMilMil.Util
 {
     public class MessageManager : MonoBehaviour
     {
-        [Header("textの置き換えロジックを実装したコンポーネントをアタッチすると置き換えが行われます")]
-        [SerializeField]
-        private List<TextReplaceStrategy> textReplaceStrategies = new List<TextReplaceStrategy>();
-        [Header("メッセージ送り時の効果音")]
-        [SerializeField]
-        private AudioClip textSound;
         private GameObject messageFramePrefab;
-        private readonly List<MessageFrameBase> activeFrames = new List<MessageFrameBase>();
+        private readonly ICollection<MessageFrameBase> activeFrames = new List<MessageFrameBase>();
 
         public async UniTask<MessageResult> MessageAsync(MessageText message, MessageConfig config, CancellationToken cToken)
         {
             cToken.ThrowIfCancellationRequested();
-
-            config = SetDefaultConfig(config);
-            message = ReplaceTexts(message);
 
             GameObject messageObj = Instantiate(messageFramePrefab, transform);
             MessageFrameBase frame = messageObj.GetComponent<MessageFrameBase>();
@@ -56,36 +47,13 @@ namespace TansanMilMil.Util
             await frame.RenderChoicesTextsAsync(cToken);
         }
 
-        public async UniTask HideMessageAsync(MessageFrameBase frame, CancellationToken cToken)
+        private async UniTask HideMessageAsync(MessageFrameBase frame, CancellationToken cToken)
         {
             cToken.ThrowIfCancellationRequested();
 
             await frame.CloseFrameAsync(cToken);
             activeFrames.Remove(frame);
             frame.DestroyMessageObj();
-        }
-
-        private MessageConfig SetDefaultConfig(MessageConfig config)
-        {
-            config.textSound ??= textSound;
-
-            return config;
-        }
-
-        private MessageText ReplaceTexts(MessageText message)
-        {
-            if (textReplaceStrategies.Count == 0)
-                return message;
-
-            var replacer = new MessageTextReplacer(textReplaceStrategies);
-            message.text = replacer.Replace(message.text);
-
-            for (int i = 0; i < message.choices.Count; i++)
-            {
-                message.choices[i] = replacer.Replace(message.choices[i]);
-            }
-
-            return message;
         }
     }
 }

@@ -8,11 +8,21 @@ namespace TansanMilMil.Util
     {
         protected MessageText message;
         protected MessageConfig config;
+        [Header("メッセージ送り時の効果音")]
+        [SerializeField]
+        private AudioClip textSound;
 
         public void SetMessageState(MessageText message, MessageConfig config)
         {
             this.message = message;
-            this.config = config;
+            this.config = SetDefaultConfig(config);
+        }
+
+        private MessageConfig SetDefaultConfig(MessageConfig config)
+        {
+            config.textSound ??= textSound;
+
+            return config;
         }
 
         public abstract UniTask OpenFrameAsync(CancellationToken cToken);

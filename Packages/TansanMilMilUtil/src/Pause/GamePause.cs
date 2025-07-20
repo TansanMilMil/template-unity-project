@@ -6,10 +6,8 @@ using Cysharp.Threading.Tasks;
 
 namespace TansanMilMil.Util
 {
-    public class GamePause : MonoBehaviour
+    public class GamePause : SingletonMonoBehaviour<GamePause>
     {
-        private static GameObject Instance;
-        public static GamePause InstanceComponent;
         public BehaviorSubject<bool> onPaused = new BehaviorSubject<bool>(false);
         [SerializeField] private AudioMixer bgmAudioMixer;
         private float bgmAudioMixerVolume = 0;
@@ -17,40 +15,6 @@ namespace TansanMilMil.Util
         private float soundAudioMixerVolume = 0;
         private BgmManager bgmManager;
         private SoundManager soundManager;
-
-        private GamePause() { }
-
-        public static GamePause GetInstance()
-        {
-            if (Instance == null)
-            {
-                throw new Exception("GamePause.Instance is null!");
-            }
-            if (InstanceComponent == null)
-            {
-                throw new Exception("GamePause.InstanceComponent is null!");
-            }
-            return InstanceComponent;
-        }
-
-        private void Awake()
-        {
-            if (Instance != null)
-            {
-                // すでにロードされていたら自分自身を破棄して終了
-                Destroy(gameObject);
-                return;
-            }
-            else
-            {
-                // ロードされていなかったら、フラグをロード済みに設定する
-                Instance = gameObject;
-                InstanceComponent = gameObject.GetComponent<GamePause>();
-                // ルート階層にないとDontDestroyOnLoadできないので強制移動させる
-                gameObject.transform.parent = null;
-                DontDestroyOnLoad(gameObject);
-            }
-        }
 
         void Start()
         {

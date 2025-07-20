@@ -2,18 +2,9 @@ using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    public class PlayerConfigManager
+    public class PlayerConfigManager : Singleton<PlayerConfigManager>
     {
-        private static readonly PlayerConfigManager Instance = new();
-
         private PlayerConfig config = new();
-
-        private PlayerConfigManager() { }
-
-        public static PlayerConfigManager GetInstance()
-        {
-            return Instance;
-        }
 
         public PlayerConfig GetConfig()
         {

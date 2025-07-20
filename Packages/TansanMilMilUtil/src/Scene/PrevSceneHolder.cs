@@ -7,10 +7,8 @@ using UnityEngine.SceneManagement;
 
 namespace TansanMilMil.Util
 {
-    public class PrevSceneHolder : MonoBehaviour
+    public class PrevSceneHolder : SingletonMonoBehaviour<PrevSceneHolder>
     {
-        private static GameObject Instance;
-        private static PrevSceneHolder InstanceComponent;
         private List<string> _prevScenes = new List<string>();
         /// <summary>
         /// 現在のSceneがloadされる前に表示していたScene名たち。
@@ -18,40 +16,6 @@ namespace TansanMilMil.Util
         public ReadOnlyCollection<string> prevScenes
         {
             get { return _prevScenes.AsReadOnly(); }
-        }
-
-        private PrevSceneHolder() { }
-
-        public static PrevSceneHolder GetInstance()
-        {
-            if (Instance == null)
-            {
-                throw new Exception("PrevSceneHolder.Instance is null!");
-            }
-            if (InstanceComponent == null)
-            {
-                throw new Exception("PrevSceneHolder.InstanceComponent is null!");
-            }
-            return InstanceComponent;
-        }
-
-        private void Awake()
-        {
-            if (Instance != null)
-            {
-                // すでにロードされていたら自分自身を破棄して終了
-                Destroy(gameObject);
-                return;
-            }
-            else
-            {
-                // ロードされていなかったら、フラグをロード済みに設定する
-                Instance = gameObject;
-                InstanceComponent = gameObject.GetComponent<PrevSceneHolder>();
-                // ルート階層にないとDontDestroyOnLoadできないので強制移動させる
-                gameObject.transform.parent = null;
-                DontDestroyOnLoad(gameObject);
-            }
         }
 
         private void Start()

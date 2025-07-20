@@ -1,20 +1,16 @@
+using Codice.CM.WorkspaceServer.DataStore.WkTree;
 using R3;
 using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    public class ConfigSaveDataManager : SaveDataManagerWithIsLoaded
+    public class ConfigSaveDataManager : SingletonMonoBehaviour<ConfigSaveDataManager>
     {
-        public static ConfigSaveDataManager Instance = new ConfigSaveDataManager();
+        public Subject<bool> loadCompleted = new Subject<bool>();
+        public Subject<bool> saveCompleted = new Subject<bool>();
+        private bool loadedInit = false;
 
-        private ConfigSaveDataManager() { }
-
-        public static ConfigSaveDataManager GetInstance()
-        {
-            return Instance;
-        }
-
-        public override void SaveInner()
+        public void Save()
         {
             Debug.Log("ConfigSaveDataManager: now saving...");
 
@@ -24,14 +20,37 @@ namespace TansanMilMil.Util
             string json = JsonUtility.ToJson(model);
             PlayerPrefs.SetString(PlayerPrefsKeys.ConfigSaveData, json);
             Debug.Log("ConfigSaveDataManager: save completed!");
+
+            AfterSave();
         }
 
-        protected override void LoadInner()
+        private void AfterSave()
+        {
+            saveCompleted.OnNext(true);
+        }
+
+        protected void Load()
         {
             string json = PlayerPrefs.GetString(PlayerPrefsKeys.ConfigSaveData);
             ConfigSaveData saveData = JsonUtility.FromJson<ConfigSaveData>(json);
             SetStaticParams(saveData);
+            loadedInit = true;
             Debug.Log("ConfigSaveDataManager: load completed!");
+
+            AfterLoad();
+        }
+
+        private void AfterLoad()
+        {
+            loadCompleted.OnNext(true);
+        }
+
+        public void LoadIfRequired()
+        {
+            if (!loadedInit)
+            {
+                Load();
+            }
         }
 
         private void SetStaticParams(ConfigSaveData saveData)

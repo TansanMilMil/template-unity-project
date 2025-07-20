@@ -2,17 +2,9 @@ using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    public class InputKeys
+    public class InputKeys : Singleton<InputKeys>
     {
-        private static InputKeys Instance = new InputKeys();
         private readonly InputKeyBinds inputKeyBinds = new InputKeyBinds();
-
-        private InputKeys() { }
-
-        public static InputKeys GetInstance()
-        {
-            return Instance;
-        }
 
         /// <summary>
         /// デフォルトのキーバインドの設定が完了したらtrueを返す。

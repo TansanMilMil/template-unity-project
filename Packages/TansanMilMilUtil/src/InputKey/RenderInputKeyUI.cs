@@ -2,7 +2,6 @@ using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static TansanMilMil.Util.InputKeys;
 
 namespace TansanMilMil.Util
 {
@@ -51,7 +50,7 @@ namespace TansanMilMil.Util
         {
             if (inputKeyImage != null)
             {
-                string spritePath = GetInstance().GetSingleKeySpritePathForUI(inputKeyType, bindConditions);
+                string spritePath = InputKeys.GetInstance().GetSingleKeySpritePathForUI(inputKeyType, bindConditions);
                 if (spritePath != null)
                 {
                     inputKeyImage.enabled = false;
@@ -68,7 +67,7 @@ namespace TansanMilMil.Util
         {
             if (inputKeyText != null)
             {
-                inputKeyText.text = GetInstance().GetSingleKeyNameForUI(inputKeyType, bindConditions);
+                inputKeyText.text = InputKeys.GetInstance().GetSingleKeyNameForUI(inputKeyType, bindConditions);
                 return true;
             }
             return false;

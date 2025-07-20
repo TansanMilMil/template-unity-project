@@ -12,37 +12,14 @@ namespace TansanMilMil.Util
     /// GameObject.Find系の結果をキャッシュするためのクラス。負荷軽減のために使おうね。
     /// </summary>
     [DefaultExecutionOrder(-40)]
-    public class GameObjectHolder : MonoBehaviour
+    public class GameObjectHolder : SingletonMonoBehaviour<GameObjectHolder>
     {
-        private static GameObject Instance;
-        private static GameObjectHolder InstanceComponent;
         /// <summary>
         /// Key: TagName, Value: GameObject
         /// </summary>
         private List<GameObjectCache> objectCaches = new List<GameObjectCache>();
         private List<ComponentCache> componentCaches = new List<ComponentCache>();
         private readonly GameObjectHolderVacuumer vacuumer = new GameObjectHolderVacuumer();
-
-        private GameObjectHolder() { }
-
-        public static GameObjectHolder GetInstance()
-        {
-            if (Instance == null)
-            {
-                throw new Exception("GameObjectHolder.Instance is null!");
-            }
-            if (InstanceComponent == null)
-            {
-                throw new Exception("GameObjectHolder.InstanceComponent is null!");
-            }
-            return InstanceComponent;
-        }
-
-        private void Awake()
-        {
-            Instance = gameObject;
-            InstanceComponent = gameObject.GetComponent<GameObjectHolder>();
-        }
 
         private void Update()
         {

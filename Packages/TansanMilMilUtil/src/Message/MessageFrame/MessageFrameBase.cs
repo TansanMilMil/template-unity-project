@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    public abstract class MessageFrameBase : MonoBehaviour
+    public abstract class MessageFrameBase : MonoBehaviour, IMessageFrame
     {
         protected MessageText message;
         protected MessageConfig config;

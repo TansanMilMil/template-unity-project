@@ -50,5 +50,15 @@ namespace TansanMilMil.Util
 
             localeService.SetLocale(cultureInfoName);
         }
+
+        public async UniTask<string> GetLocalizedStringAsync(LocaleString localeString)
+        {
+            if (!IsInitialized)
+            {
+                throw new InvalidOperationException("LocaleManager is not initialized.");
+            }
+
+            return await localeService.GetLocalizedStringAsync(localeString);
+        }
     }
 }

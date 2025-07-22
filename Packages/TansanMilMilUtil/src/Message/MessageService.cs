@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
@@ -9,6 +10,7 @@ namespace TansanMilMil.Util
     {
         private readonly IMessageFrameFactory frameFactory;
         private readonly List<IMessageFrame> activeFrames = new List<IMessageFrame>();
+        private readonly object lockObject = new object();
 
         public MessageService(IMessageFrameFactory frameFactory)
         {
@@ -17,7 +19,10 @@ namespace TansanMilMil.Util
 
         public IReadOnlyCollection<IMessageFrame> GetActiveFrames()
         {
-            return new ReadOnlyCollection<IMessageFrame>(activeFrames);
+            lock (lockObject)
+            {
+                return new ReadOnlyCollection<IMessageFrame>(new List<IMessageFrame>(activeFrames));
+            }
         }
 
         public async UniTask<MessageResult> ShowMessageAsync(MessageText message, MessageConfig config, CancellationToken cToken)
@@ -27,7 +32,7 @@ namespace TansanMilMil.Util
             IMessageFrame frame = frameFactory.CreateMessageFrame();
             if (frame == null)
             {
-                return new MessageResult(null, -1);
+                throw new InvalidOperationException("Failed to create message frame. Ensure the factory is properly initialized.");
             }
 
             frame.SetMessageState(message, config);
@@ -48,7 +53,11 @@ namespace TansanMilMil.Util
         {
             cToken.ThrowIfCancellationRequested();
 
-            activeFrames.Add(frame);
+            lock (lockObject)
+            {
+                activeFrames.Add(frame);
+            }
+
             await frame.OpenFrameAsync(cToken);
             await frame.RenderTextAsync(cToken);
             await frame.OpenChoicesFrameAsync(cToken);
@@ -60,7 +69,12 @@ namespace TansanMilMil.Util
             cToken.ThrowIfCancellationRequested();
 
             await frame.CloseFrameAsync(cToken);
-            activeFrames.Remove(frame);
+
+            lock (lockObject)
+            {
+                activeFrames.Remove(frame);
+            }
+
             frame.DestroyMessageObj();
         }
     }

@@ -6,7 +6,7 @@ using UnityEngine.Localization.Settings;
 
 namespace TansanMilMil.Util
 {
-    public class LocaleRegistry : ILocaleRegistry
+    internal class LocaleRegistry : ILocaleRegistry
     {
         private IEnumerable<Locale> availableLocales;
         private Locale defaultLocale;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TansanMilMil.Util
 {
-    public class MessageTextReplacer
+    internal class MessageTextReplacer
     {
         public event Func<string, string> replaceText;
 

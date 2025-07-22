@@ -9,7 +9,7 @@ using UnityEngine.Localization.Settings;
 
 namespace TansanMilMil.Util
 {
-    public class LocaleService : ILocaleService
+    internal class LocaleService : ILocaleService
     {
         private readonly ILocaleConfigProvider configProvider;
         private readonly ILocaleRegistry localeRegistry;

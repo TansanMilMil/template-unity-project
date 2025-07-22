@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 
 namespace TansanMilMil.Util
 {
-    public class LocaleConfigProvider : ILocaleConfigProvider
+    internal class LocaleConfigProvider : ILocaleConfigProvider
     {
         public string GetStoredCultureInfoName()
         {

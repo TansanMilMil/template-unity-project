@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    public class MessageFrameFactory : IMessageFrameFactory
+    internal class MessageFrameFactory : IMessageFrameFactory
     {
         private readonly GameObject messageFramePrefab;
         private readonly Transform baseObject;

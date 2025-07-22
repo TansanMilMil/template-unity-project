@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 
 namespace TansanMilMil.Util
 {
-    public class MessageService : IMessageService
+    internal class MessageService : IMessageService
     {
         private readonly IMessageFrameFactory frameFactory;
         private readonly List<IMessageFrame> activeFrames = new List<IMessageFrame>();

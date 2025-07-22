@@ -6,6 +6,7 @@ namespace TansanMilMil.Util
         NotChangeBgm = 0,
         /// <summary>BGMを止める</summary>
         StopBgm = 1,
-        Title = 2,
+        /// <summary>上記以外のBGM全般</summary>
+        NormalBgm = 2,
     }
 }

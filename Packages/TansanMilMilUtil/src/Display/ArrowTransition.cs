@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using R3;
@@ -18,8 +19,10 @@ namespace TansanMilMil.Util
         private Subject<bool> _showAllBlackImage = new Subject<bool>();
         public Observable<bool> ShowAllBlackImage => _showAllBlackImage;
 
-        public async UniTask FadeOutAsync(float duration = 0.7f)
+        public async UniTask FadeOutAsync(float duration = 0.7f, CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+
             KillPrevAnimation();
             SetPosXImmediately(leftArrowPosX: leftEndPosX, rightArrowPosX: rightEndPosX);
             _showAllBlackImage.OnNext(false);
@@ -35,11 +38,13 @@ namespace TansanMilMil.Util
                 RectTransform rect = rightArrow.transform as RectTransform;
                 _ = tween.Join(rect.DOAnchorPosX(rightStartPosX, duration).SetEase(Ease.Linear));
             }
-            await tween;
+            await tween.WithCancellation(cToken);
         }
 
-        public async UniTask FadeInAsync(float duration = 0.7f)
+        public async UniTask FadeInAsync(float duration = 0.7f, CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+
             KillPrevAnimation();
             SetPosXImmediately();
             _showAllBlackImage.OnNext(false);
@@ -55,7 +60,7 @@ namespace TansanMilMil.Util
                 RectTransform rect = rightArrow.transform as RectTransform;
                 _ = tween.Join(rect.DOAnchorPosX(rightEndPosX, duration).SetEase(Ease.Linear));
             }
-            await tween;
+            await tween.WithCancellation(cToken);
         }
 
         private void SetPosXImmediately(float leftArrowPosX = leftStartPosX, float rightArrowPosX = rightStartPosX)

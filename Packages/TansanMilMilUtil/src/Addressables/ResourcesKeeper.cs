@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -7,8 +8,10 @@ namespace TansanMilMil.Util
 {
     public class ResourcesKeeper<T> : AssetsKeeper<T> where T : UnityEngine.Object
     {
-        protected override async UniTask<T> LoadFromAssetAsync(string pathName)
+        protected override async UniTask<T> LoadFromAssetAsync(string pathName, CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+            
             T asset = Resources.Load<T>(pathName);
             caches.Insert(0, new AddressablesKeeperItem<T>(pathName, asset, null));
             await UniTask.CompletedTask;

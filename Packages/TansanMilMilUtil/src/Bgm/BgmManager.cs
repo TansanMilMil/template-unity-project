@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using DG.Tweening.Core;
@@ -85,9 +86,11 @@ namespace TansanMilMil.Util
             TimeBeforeMovingScene = 0;
         }
 
-        public async UniTask<AudioClip> LoadAssetAsync(string bgmPath)
+        public async UniTask<AudioClip> LoadAssetAsync(string bgmPath, CancellationToken cToken = default)
         {
-            AudioClip audioClip = await AudioKeeper.LoadAssetAsync(bgmPath);
+            cToken.ThrowIfCancellationRequested();
+            
+            AudioClip audioClip = await AudioKeeper.LoadAssetAsync(bgmPath, cToken);
             return audioClip;
         }
 
@@ -182,26 +185,33 @@ namespace TansanMilMil.Util
             }
         }
 
-        public async UniTask PlayByPathAsync(string bgmPath, float startTime = Bgm.NoTimeSetting)
+        public async UniTask PlayByPathAsync(string bgmPath, float startTime = Bgm.NoTimeSetting, CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+            
             if (bgmPath == BgmFactory.GetInstance().Create(bgmPath).filePath)
             {
                 Stop();
                 return;
             }
-            AudioClip audio = await LoadAssetAsync(bgmPath);
+            
+            AudioClip audio = await LoadAssetAsync(bgmPath, cToken);
+            
+            cToken.ThrowIfCancellationRequested();
             Play(audio, startTime);
         }
 
-        public async UniTask<bool> PlayWithFadeInAsync(AudioClip audioClip = null, float duration = 1.0f, float startTime = Bgm.NoTimeSetting)
+        public async UniTask<bool> PlayWithFadeInAsync(AudioClip audioClip = null, float duration = 1.0f, float startTime = Bgm.NoTimeSetting, CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+            
             KillAllAsyncEffect();
             SetUp(audioClip, startTime);
             audioSource.volume = 0;
             audioSource.Play();
 
             fadeIn = DOTween.To(() => audioSource.volume, (x) => audioSource.volume = x, maxVolume, duration).SetEase(Ease.Linear);
-            await fadeIn;
+            await fadeIn.WithCancellation(cToken);
 
             return true;
         }
@@ -215,12 +225,15 @@ namespace TansanMilMil.Util
             }
         }
 
-        public async UniTask<bool> FadeOutAsync(float duration = 1.0f)
+        public async UniTask<bool> FadeOutAsync(float duration = 1.0f, CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+            
             KillAllAsyncEffect();
             fadeOut = DOTween.To(() => audioSource.volume, (x) => audioSource.volume = x, 0f, duration).SetEase(Ease.Linear);
-            await fadeOut;
+            await fadeOut.WithCancellation(cToken);
 
+            cToken.ThrowIfCancellationRequested();
             audioSource.volume = 0;
 
             return true;

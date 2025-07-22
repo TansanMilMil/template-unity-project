@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -32,10 +33,14 @@ namespace TansanMilMil.Util
             transition.color = c;
         }
 
-        public async UniTask FadeAsync(float alpha, float duration = 0.7f)
+        public async UniTask FadeAsync(float alpha, float duration = 0.7f, CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+            
             transition.transform.localScale = Vector3.one;
-            await transition.DOColor(new Color(0, 0, 0, alpha), duration);
+            await transition.DOColor(new Color(0, 0, 0, alpha), duration).WithCancellation(cToken);
+            
+            cToken.ThrowIfCancellationRequested();
             if (alpha == 0)
                 transition.transform.localScale = Vector3.zero;
         }

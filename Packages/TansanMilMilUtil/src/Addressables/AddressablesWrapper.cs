@@ -1,3 +1,4 @@
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -36,9 +37,11 @@ namespace TansanMilMil.Util
             Addressables.Release(opHandle);
         }
 
-        public async UniTask<T> AwaitHandle(AsyncOperationHandle<T> handle)
+        public async UniTask<T> AwaitHandle(AsyncOperationHandle<T> handle, CancellationToken cToken = default)
         {
-            return await handle;
+            cToken.ThrowIfCancellationRequested();
+            
+            return await handle.WithCancellation(cToken);
         }
     }
 
@@ -64,9 +67,11 @@ namespace TansanMilMil.Util
             return instance;
         }
 
-        public async UniTask DownloadDependenciesAsync(object key, bool autoReleaseHandle = false)
+        public async UniTask DownloadDependenciesAsync(object key, bool autoReleaseHandle = false, CancellationToken cToken = default)
         {
-            await Addressables.DownloadDependenciesAsync(key, autoReleaseHandle);
+            cToken.ThrowIfCancellationRequested();
+            
+            await Addressables.DownloadDependenciesAsync(key, autoReleaseHandle).WithCancellation(cToken);
         }
     }
 }

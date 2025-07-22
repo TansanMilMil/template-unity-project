@@ -25,17 +25,17 @@ namespace TansanMilMil.Util
             return config;
         }
 
-        public abstract UniTask OpenFrameAsync(CancellationToken cToken);
+        public abstract UniTask OpenFrameAsync(CancellationToken cToken = default);
 
-        public abstract UniTask RenderTextAsync(CancellationToken cToken);
+        public abstract UniTask RenderTextAsync(CancellationToken cToken = default);
 
-        public abstract UniTask OpenChoicesFrameAsync(CancellationToken cToken);
+        public abstract UniTask OpenChoicesFrameAsync(CancellationToken cToken = default);
 
-        public abstract UniTask RenderChoicesTextsAsync(CancellationToken cToken);
+        public abstract UniTask RenderChoicesTextsAsync(CancellationToken cToken = default);
 
-        public abstract UniTask<MessageResult> WaitForCloseAsync(CancellationToken cToken);
+        public abstract UniTask<MessageResult> WaitForCloseAsync(CancellationToken cToken = default);
 
-        public abstract UniTask CloseFrameAsync(CancellationToken cToken);
+        public abstract UniTask CloseFrameAsync(CancellationToken cToken = default);
 
         public void DestroyMessageObj()
         {

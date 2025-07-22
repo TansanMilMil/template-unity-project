@@ -13,12 +13,8 @@ namespace TansanMilMil.Util
         public Image transition;
         private Tweener tween;
         public ArrowTransition arrowTransition;
-        private CancellationToken ctDestroy;
-
         private void Start()
         {
-            ctDestroy = this.GetCancellationTokenOnDestroy();
-
             SetInitSubscriber();
         }
 
@@ -54,16 +50,17 @@ namespace TansanMilMil.Util
             ;
         }
 
-        public async UniTask FadeInAsync(float duration = 0.7f, Color? color = null)
+        public async UniTask FadeInAsync(float duration = 0.7f, Color? color = null, CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+
             Color changeColor = color ?? Color.black;
             KillPrevAnimation();
 
             transition.color = Color.clear;
             transition.transform.localScale = Vector3.one;
             tween = transition.DOColor(changeColor, duration);
-            await tween;
-            await UniTask.Yield(ctDestroy);
+            await tween.WithCancellation(cToken);
         }
 
         public void FadeInImmediately(Color? color = null)
@@ -74,16 +71,19 @@ namespace TansanMilMil.Util
             transition.transform.localScale = Vector3.one;
         }
 
-        public async UniTask FadeOutAsync(float duration = 0.7f, Color? color = null)
+        public async UniTask FadeOutAsync(float duration = 0.7f, Color? color = null, CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+
             Color changeColor = color ?? Color.black;
             KillPrevAnimation();
 
             transition.color = changeColor;
             transition.transform.localScale = Vector3.one;
             tween = transition.DOColor(Color.clear, duration);
-            await tween;
-            await UniTask.Yield(ctDestroy);
+            await tween.WithCancellation(cToken);
+
+            cToken.ThrowIfCancellationRequested();
             transition.transform.localScale = Vector3.zero;
         }
 
@@ -95,16 +95,18 @@ namespace TansanMilMil.Util
             transition.transform.localScale = Vector3.zero;
         }
 
-        public async UniTask ArrowFadeOutAsync(float duration = 0.7f)
+        public async UniTask ArrowFadeOutAsync(float duration = 0.7f, CancellationToken cToken = default)
         {
-            await arrowTransition.FadeOutAsync(duration);
-            await UniTask.Yield(ctDestroy);
+            cToken.ThrowIfCancellationRequested();
+
+            await arrowTransition.FadeOutAsync(duration, cToken);
         }
 
-        public async UniTask ArrowFadeInAsync(float duration = 0.7f)
+        public async UniTask ArrowFadeInAsync(float duration = 0.7f, CancellationToken cToken = default)
         {
-            await arrowTransition.FadeInAsync(duration);
-            await UniTask.Yield(ctDestroy);
+            cToken.ThrowIfCancellationRequested();
+
+            await arrowTransition.FadeInAsync(duration, cToken);
         }
 
         private void KillPrevAnimation()

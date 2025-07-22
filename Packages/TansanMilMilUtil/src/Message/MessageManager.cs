@@ -23,7 +23,7 @@ namespace TansanMilMil.Util
             messageService = new MessageService(frameFactory);
         }
 
-        public async UniTask<MessageResult> MessageAsync(MessageText message, MessageConfig config, CancellationToken cToken)
+        public async UniTask<MessageResult> MessageAsync(MessageText message, MessageConfig config, CancellationToken cToken = default)
         {
             return await messageService.ShowMessageAsync(message, config, cToken);
         }

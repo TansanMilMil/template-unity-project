@@ -25,7 +25,7 @@ namespace TansanMilMil.Util
             }
         }
 
-        public async UniTask<MessageResult> ShowMessageAsync(MessageText message, MessageConfig config, CancellationToken cToken)
+        public async UniTask<MessageResult> ShowMessageAsync(MessageText message, MessageConfig config, CancellationToken cToken = default)
         {
             cToken.ThrowIfCancellationRequested();
 
@@ -49,7 +49,7 @@ namespace TansanMilMil.Util
             return result;
         }
 
-        private async UniTask ShowFrameAsync(IMessageFrame frame, CancellationToken cToken)
+        private async UniTask ShowFrameAsync(IMessageFrame frame, CancellationToken cToken = default)
         {
             cToken.ThrowIfCancellationRequested();
 
@@ -64,7 +64,7 @@ namespace TansanMilMil.Util
             await frame.RenderChoicesTextsAsync(cToken);
         }
 
-        private async UniTask HideFrameAsync(IMessageFrame frame, CancellationToken cToken)
+        private async UniTask HideFrameAsync(IMessageFrame frame, CancellationToken cToken = default)
         {
             cToken.ThrowIfCancellationRequested();
 

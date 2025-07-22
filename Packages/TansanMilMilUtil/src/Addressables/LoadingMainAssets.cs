@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -15,11 +16,11 @@ namespace TansanMilMil.Util
 
         void Start()
         {
-            InitAsync().Forget();
+            InitAsync(this.GetCancellationTokenOnDestroy()).Forget();
         }
 
 #pragma warning disable CS1998
-        private async UniTask InitAsync()
+        private async UniTask InitAsync(CancellationToken cToken = default)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             Debug.Log("skip => Addressables.DownloadDependenciesAsync");
@@ -28,7 +29,7 @@ namespace TansanMilMil.Util
             {
                 loadingText.SetActive(true);
                 Debug.Log("Addressables.DownloadDependenciesAsync...");
-                await AddressablesWrapper.GetInstance().DownloadDependenciesAsync(addressableLabelInitLoad.labelString, true);
+                await AddressablesWrapper.GetInstance().DownloadDependenciesAsync(addressableLabelInitLoad.labelString, true, cToken);
                 Debug.Log("Addressables.DownloadDependenciesAsync was completed.");
             }
             catch (Exception e)

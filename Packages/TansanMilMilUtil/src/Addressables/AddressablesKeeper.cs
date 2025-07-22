@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -23,10 +24,12 @@ namespace TansanMilMil.Util
                 this.addressablesWrapper = addressablesWrapper;
             }
         }
-        protected override async UniTask<T> LoadFromAssetAsync(string pathName)
+        protected override async UniTask<T> LoadFromAssetAsync(string pathName, CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+
             AsyncOperationHandle<T> handle = addressablesWrapper.LoadAssetAsync(pathName);
-            T asset = await addressablesWrapper.AwaitHandle(handle);
+            T asset = await addressablesWrapper.AwaitHandle(handle, cToken);
             caches.Insert(0, new AddressablesKeeperItem<T>(pathName, asset, handle));
             return asset;
         }

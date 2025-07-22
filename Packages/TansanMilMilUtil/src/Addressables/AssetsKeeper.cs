@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -21,21 +22,25 @@ namespace TansanMilMil.Util
             return caches.AsReadOnly();
         }
 
-        public async UniTask<T> LoadAssetAsync(string pathName)
+        public async UniTask<T> LoadAssetAsync(string pathName, CancellationToken cToken = default)
         {
-            T asset = await LoadAssetOrCacheAsync(pathName);
+            cToken.ThrowIfCancellationRequested();
+
+            T asset = await LoadAssetOrCacheAsync(pathName, cToken);
             AutoRelease();
             return asset;
         }
 
-        private async UniTask<T> LoadAssetOrCacheAsync(string pathName)
+        private async UniTask<T> LoadAssetOrCacheAsync(string pathName, CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+
             int i = caches.FindIndex(h => h.pathName == pathName);
             if (i == -1)
             {
                 try
                 {
-                    return await LoadFromAssetAsync(pathName);
+                    return await LoadFromAssetAsync(pathName, cToken);
                 }
                 catch (InvalidKeyException e)
                 {
@@ -52,7 +57,7 @@ namespace TansanMilMil.Util
             }
         }
 
-        protected abstract UniTask<T> LoadFromAssetAsync(string pathName);
+        protected abstract UniTask<T> LoadFromAssetAsync(string pathName, CancellationToken cToken = default);
 
         public abstract void ReleaseAsset(string pathName);
 
@@ -72,7 +77,8 @@ namespace TansanMilMil.Util
         /// /// <param name="keepLateCache">Releaseせず残すcache数</param>
         private void ReleaseOldAssets(int keepLateCache)
         {
-            if (caches.Count <= keepLateCache) return;
+            if (caches.Count <= keepLateCache)
+                return;
             int deleteCount = caches.Count - keepLateCache;
 
             for (; deleteCount >= 1; deleteCount--)

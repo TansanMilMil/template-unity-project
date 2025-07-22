@@ -1,8 +1,8 @@
 namespace TansanMilMil.Util
 {
-    public class CultureInfoName
+    public static class CultureInfoName
     {
-        public static string EN_US = "en-US";
-        public static string JA_JP = "ja-JP";
+        public const string EN_US = "en-US";
+        public const string JA_JP = "ja-JP";
     }
 }

@@ -2,10 +2,13 @@ using UnityEngine.Localization;
 
 namespace TansanMilMil.Util
 {
-    public class LocaleSettings
+    public static class LocaleSettings
     {
-        private const bool CanUseLocalization = false;
-        public readonly static Locale DefaultLocale = AvailableLocales.JAJP;
+        private const bool CanUseLocalization = true;
+
+        public static Locale DefaultLocale => AvailableLocales.JAJP;
         public static bool CanUseLocale => CanUseLocalization;
+
+        public static string DefaultCultureInfoName => CultureInfoName.JA_JP;
     }
 }

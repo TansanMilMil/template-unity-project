@@ -152,7 +152,7 @@ namespace TansanMilMil.Util
             {
                 foreach (DeviceType deviceType in Enum.GetValues(typeof(DeviceType)))
                 {
-                    if (!SupportedDevices.IsSupported(deviceType))
+                    if (!SupportedDevices.GetInstance().IsSupported(deviceType))
                     {
                         continue;
                     }

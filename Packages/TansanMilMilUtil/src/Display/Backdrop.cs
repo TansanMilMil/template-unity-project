@@ -11,11 +11,33 @@ namespace TansanMilMil.Util
     {
         public Image transition;
 
+        private void Update()
+        {
+#if UNITY_EDITOR
+            // エディタ上で常時表示されると見づらいので、エディタ上では透明にする
+            if (!Application.isPlaying)
+            {
+                MakeTransparent(transition);
+            }
+#endif
+        }
+
+        private void MakeTransparent(Image transition)
+        {
+            if (transition == null)
+                return;
+
+            Color c = transition.color;
+            c.a = 0;
+            transition.color = c;
+        }
+
         public async UniTask FadeAsync(float alpha, float duration = 0.7f)
         {
             transition.transform.localScale = Vector3.one;
             await transition.DOColor(new Color(0, 0, 0, alpha), duration);
-            if (alpha == 0) transition.transform.localScale = Vector3.zero;
+            if (alpha == 0)
+                transition.transform.localScale = Vector3.zero;
         }
 
         public void FadeOutImmediately()

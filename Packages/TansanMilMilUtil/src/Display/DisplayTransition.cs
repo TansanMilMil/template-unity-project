@@ -22,6 +22,27 @@ namespace TansanMilMil.Util
             SetInitSubscriber();
         }
 
+        private void Update()
+        {
+#if UNITY_EDITOR
+            // エディタ上で常時表示されると見づらいので、エディタ上では透明にする
+            if (!Application.isPlaying)
+            {
+                MakeTransparent(transition);
+            }
+#endif
+        }
+
+        private void MakeTransparent(Image transition)
+        {
+            if (transition == null)
+                return;
+
+            Color c = transition.color;
+            c.a = 0;
+            transition.color = c;
+        }
+
         private void SetInitSubscriber()
         {
             arrowTransition.ShowAllBlackImage

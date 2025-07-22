@@ -1,3 +1,4 @@
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -20,11 +21,13 @@ namespace TansanMilMil.Util
 
         private void Start()
         {
-            RenderKeyNameAndSpriteAsync().Forget();
+            RenderKeyNameAndSpriteAsync(this.GetCancellationTokenOnDestroy()).Forget();
         }
 
-        private async UniTask RenderKeyNameAndSpriteAsync()
+        private async UniTask RenderKeyNameAndSpriteAsync(CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+            
             if (inputKeyImage != null)
             {
                 inputKeyImage.enabled = false;
@@ -35,26 +38,31 @@ namespace TansanMilMil.Util
             }
 
             // 文字で表現できないKeyCodeがあるのでImageを優先的に表示させる
-            bool imageRendered = await RenderKeyImageAsync();
+            bool imageRendered = await RenderKeyImageAsync(cToken);
+            
+            cToken.ThrowIfCancellationRequested();
             if (imageRendered && renderOnlyOne)
             {
                 return;
             }
 
             RenderKeyText();
-
             RenderSubstituteIconIfNeed();
         }
 
-        private async UniTask<bool> RenderKeyImageAsync()
+        private async UniTask<bool> RenderKeyImageAsync(CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+            
             if (inputKeyImage != null)
             {
                 string spritePath = InputKeys.GetInstance().GetSingleKeySpritePathForUI(inputKeyType, bindConditions);
                 if (spritePath != null)
                 {
                     inputKeyImage.enabled = false;
-                    inputKeyImage.sprite = await SpriteKeeper.LoadAssetAsync(spritePath);
+                    inputKeyImage.sprite = await SpriteKeeper.LoadAssetAsync(spritePath, cToken);
+                    
+                    cToken.ThrowIfCancellationRequested();
                     inputKeyImage.enabled = true;
 
                     return true;

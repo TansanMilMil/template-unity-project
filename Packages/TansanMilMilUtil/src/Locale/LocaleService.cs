@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -32,12 +33,15 @@ namespace TansanMilMil.Util
             messageTextReplacer = new MessageTextReplacer(strategies);
         }
 
-        public async UniTask InitializeAsync()
+        public async UniTask InitializeAsync(CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+
             try
             {
-                await UniTask.WaitUntil(() => LocalizationSettings.InitializationOperation.IsDone);
+                await UniTask.WaitUntil(() => LocalizationSettings.InitializationOperation.IsDone, cancellationToken: cToken);
 
+                cToken.ThrowIfCancellationRequested();
                 InitializeAvailableLocales();
                 LoadAndApplyStoredLocale();
 
@@ -75,8 +79,10 @@ namespace TansanMilMil.Util
             }
         }
 
-        public async UniTask<string> GetLocalizedStringAsync(LocaleString localeString)
+        public async UniTask<string> GetLocalizedStringAsync(LocaleString localeString, CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+
             if (localeString == null)
                 throw new ArgumentNullException(nameof(localeString));
 
@@ -91,8 +97,9 @@ namespace TansanMilMil.Util
 
             try
             {
-                var entry = await LocalizationSettings.StringDatabase.GetTableEntryAsync(localeString.tableReference.ToString(), localeString.key);
+                var entry = await LocalizationSettings.StringDatabase.GetTableEntryAsync(localeString.tableReference.ToString(), localeString.key).WithCancellation(cToken);
 
+                cToken.ThrowIfCancellationRequested();
                 if (entry.Entry == null)
                 {
                     Debug.LogWarning($"Localization entry not found: {localeString.tableReference}.{localeString.key}");

@@ -1,3 +1,4 @@
+using System.Threading;
 using Cysharp.Threading.Tasks;
 
 using UnityEngine;
@@ -45,12 +46,14 @@ namespace TansanMilMil.Util
             audioSource.PlayOneShot(se);
         }
 
-        public async UniTask PlayAsync(AudioClip se)
+        public async UniTask PlayAsync(AudioClip se, CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+            
             audioSource.time = 0;
             audioSource.volume = 1;
             audioSource.PlayOneShot(se);
-            await UniTask.WaitUntil(() => !audioSource.isPlaying);
+            await UniTask.WaitUntil(() => !audioSource.isPlaying, cancellationToken: cToken);
         }
 
         /// <summary>

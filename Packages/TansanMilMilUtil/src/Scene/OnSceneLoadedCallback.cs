@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using R3;
 using UnityEngine;
@@ -34,11 +35,13 @@ namespace TansanMilMil.Util
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             _onSceneChanged.OnNext(true);
-            DoCallbackAsync().Forget();
+            DoCallbackAsync(this.GetCancellationTokenOnDestroy()).Forget();
         }
 
-        private async UniTask DoCallbackAsync()
+        private async UniTask DoCallbackAsync(CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+            
             if (callbackAsync != null)
             {
                 await callbackAsync();

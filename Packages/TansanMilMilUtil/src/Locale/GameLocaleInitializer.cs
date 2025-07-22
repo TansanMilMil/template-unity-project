@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using TansanMilMil.Util;
 using R3;
@@ -16,28 +17,34 @@ namespace TansanMilMil.Util
     {
         private void Awake()
         {
-            InitGameLocaleAsync().Forget();
+            InitGameLocaleAsync(this.GetCancellationTokenOnDestroy()).Forget();
         }
 
-        private async UniTask InitGameLocaleAsync()
+        private async UniTask InitGameLocaleAsync(CancellationToken cToken = default)
         {
-            await WaitDependenciesInitAsync();
+            cToken.ThrowIfCancellationRequested();
+            
+            await WaitDependenciesInitAsync(cToken);
 
+            cToken.ThrowIfCancellationRequested();
             string localeInConfig = PlayerConfigManager.GetInstance().GetConfig().cultureInfoName;
             LocaleManager.GetInstance().SetLocale(localeInConfig);
 
             gameObject.SetActive(false);
         }
 
-        private async UniTask WaitDependenciesInitAsync()
+        private async UniTask WaitDependenciesInitAsync(CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+            
             Debug.Log("Waiting for LocaleManager and ConfigSaveDataManager initialization...");
             await UniTask.WaitUntil(() =>
                 LocalizationSettings.InitializationOperation.IsDone &&
-                LocaleManager.GetInstance().IsInitialized);
+                LocaleManager.GetInstance().IsInitialized, cancellationToken: cToken);
 
+            cToken.ThrowIfCancellationRequested();
             Debug.Log("Waiting for ConfigSaveDataManager to load initial data...");
-            await UniTask.WaitUntil(() => ConfigSaveDataManager.GetInstance().LoadedInit);
+            await UniTask.WaitUntil(() => ConfigSaveDataManager.GetInstance().LoadedInit, cancellationToken: cToken);
         }
     }
 }

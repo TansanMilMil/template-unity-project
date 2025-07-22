@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace TansanMilMil.Util
         protected override void OnSingletonAwake()
         {
             InitializeService();
-            InitializeAsync().Forget();
+            InitializeAsync(this.GetCancellationTokenOnDestroy()).Forget();
         }
 
         private void InitializeService()
@@ -24,11 +25,15 @@ namespace TansanMilMil.Util
             localeService = new LocaleService(configProvider, localeRegistry);
         }
 
-        private async UniTask InitializeAsync()
+        private async UniTask InitializeAsync(CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+            
             try
             {
-                await localeService.InitializeAsync();
+                await localeService.InitializeAsync(cToken);
+                
+                cToken.ThrowIfCancellationRequested();
                 isInitialized = true;
                 gameObject.SetActive(false);
             }
@@ -51,14 +56,16 @@ namespace TansanMilMil.Util
             localeService.SetLocale(cultureInfoName);
         }
 
-        public async UniTask<string> GetLocalizedStringAsync(LocaleString localeString)
+        public async UniTask<string> GetLocalizedStringAsync(LocaleString localeString, CancellationToken cToken = default)
         {
+            cToken.ThrowIfCancellationRequested();
+            
             if (!IsInitialized)
             {
                 throw new InvalidOperationException("LocaleManager is not initialized.");
             }
 
-            return await localeService.GetLocalizedStringAsync(localeString);
+            return await localeService.GetLocalizedStringAsync(localeString, cToken);
         }
     }
 }

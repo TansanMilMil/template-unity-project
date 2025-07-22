@@ -2,7 +2,7 @@ namespace TansanMilMil.Util
 {
     public class AssetsTypeSettings
     {
-        private const AssetsType assetsType = AssetsType.Resources;
+        private static AssetsType assetsType = AssetsType.Resources;
 
         public enum AssetsType
         {

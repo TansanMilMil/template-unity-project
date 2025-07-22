@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine.Localization;
 
@@ -11,6 +12,8 @@ namespace TansanMilMil.Util
         void SetLocale(Locale locale);
         Locale GetCurrentLocale();
         string GetCurrentCultureInfoName();
+        IReadOnlyList<Locale> GetAvailableLocales();
+        bool IsLocaleSupported(string cultureInfoName);
         bool IsInitialized { get; }
     }
 }

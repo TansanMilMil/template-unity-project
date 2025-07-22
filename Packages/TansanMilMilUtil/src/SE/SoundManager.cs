@@ -18,7 +18,6 @@ namespace TansanMilMil.Util
 
         private void Start()
         {
-            ConfigSaveDataManager.GetInstance().LoadIfRequired();
             SetMixerVolume(PlayerConfigManager.GetInstance().GetConfig().soundVolume);
         }
 

@@ -1,9 +1,10 @@
+using Cysharp.Threading.Tasks;
+
 namespace TansanMilMil.Util
 {
     public interface ILocaleConfigProvider
     {
-        void LoadConfig();
         string GetStoredCultureInfoName();
-        void SaveCultureInfoName(string cultureInfoName);
+        void SetCultureInfoName(string cultureInfoName);
     }
 }

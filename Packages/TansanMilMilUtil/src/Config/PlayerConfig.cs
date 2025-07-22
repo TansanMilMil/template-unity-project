@@ -9,7 +9,7 @@ namespace TansanMilMil.Util
     public class PlayerConfig
     {
         public float playerEffectAddTimeVal = PlayerEffectAddTimeValNormal;
-        public string cultureInfoName = CultureInfoName.JA_JP;
+        public string cultureInfoName = null;
         public int messageWriteTextInterval = MessageWriteTextIntervalNormal;
         /// <summary>
         /// 音量をdBで指定。0～-80まで。
@@ -32,11 +32,6 @@ namespace TansanMilMil.Util
             Normal = 0,
             Fast = 1,
         }
-        public enum CultureInfoNameType
-        {
-            // EN_US = 0,
-            JA_JP = 1,
-        }
         public const float PlayerEffectAddTimeValSlow = 0f;
         public const float PlayerEffectAddTimeValNormal = 0.2f;
         public const float PlayerEffectAddTimeValFast = 0.6f;
@@ -48,11 +43,6 @@ namespace TansanMilMil.Util
                 { PlayerEffectAddTimeType.Slow, PlayerEffectAddTimeValSlow },
                 { PlayerEffectAddTimeType.Normal, PlayerEffectAddTimeValNormal },
                 { PlayerEffectAddTimeType.Fast, PlayerEffectAddTimeValFast },
-            };
-        public static readonly Dictionary<CultureInfoNameType, string> CultureInfoNameDict = new Dictionary<CultureInfoNameType, string>()
-            {
-                // { CultureInfoNameType.EN_US, CultureInfoName.EN_US },
-                { CultureInfoNameType.JA_JP, CultureInfoName.JA_JP },
             };
         public static readonly Dictionary<MessageWriteTextIntervalType, int> MessageWriteTextIntervalDict = new Dictionary<MessageWriteTextIntervalType, int>()
             {

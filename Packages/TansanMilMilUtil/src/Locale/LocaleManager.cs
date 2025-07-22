@@ -11,8 +11,6 @@ namespace TansanMilMil.Util
         private ILocaleService localeService;
         private bool isInitialized = false;
 
-        public ILocaleService Service => localeService;
-
         protected override void OnSingletonAwake()
         {
             InitializeService();
@@ -22,7 +20,8 @@ namespace TansanMilMil.Util
         private void InitializeService()
         {
             ILocaleConfigProvider configProvider = new LocaleConfigProvider();
-            localeService = new LocaleService(configProvider);
+            ILocaleRegistry localeRegistry = new LocaleRegistry();
+            localeService = new LocaleService(configProvider, localeRegistry);
         }
 
         private async UniTask InitializeAsync()
@@ -41,5 +40,15 @@ namespace TansanMilMil.Util
         }
 
         public bool IsInitialized => isInitialized && localeService.IsInitialized;
+
+        public void SetLocale(string cultureInfoName)
+        {
+            if (!IsInitialized)
+            {
+                throw new InvalidOperationException("LocaleManager is not initialized.");
+            }
+
+            localeService.SetLocale(cultureInfoName);
+        }
     }
 }

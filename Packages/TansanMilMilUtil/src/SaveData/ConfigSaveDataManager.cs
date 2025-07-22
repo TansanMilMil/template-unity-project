@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace TansanMilMil.Util
 {
+    [DefaultExecutionOrder(-10)]
     public class ConfigSaveDataManager : SingletonMonoBehaviour<ConfigSaveDataManager>
     {
         private Subject<bool> _loadCompleted = new Subject<bool>();
@@ -11,6 +12,12 @@ namespace TansanMilMil.Util
         public Observable<bool> LoadCompleted => _loadCompleted;
         public Observable<bool> SaveCompleted => _saveCompleted;
         private bool loadedInit = false;
+        public bool LoadedInit => loadedInit;
+
+        protected override void OnSingletonStart()
+        {
+            LoadAsInit();
+        }
 
         public void Save()
         {
@@ -47,10 +54,11 @@ namespace TansanMilMil.Util
             _loadCompleted.OnNext(true);
         }
 
-        public void LoadIfRequired()
+        public void LoadAsInit()
         {
             if (!loadedInit)
             {
+                Debug.Log("ConfigSaveDataManager: loading as init...");
                 Load();
             }
         }

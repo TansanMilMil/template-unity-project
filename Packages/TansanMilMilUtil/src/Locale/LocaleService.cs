@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -11,6 +12,7 @@ namespace TansanMilMil.Util
     public class LocaleService : ILocaleService
     {
         private readonly ILocaleConfigProvider configProvider;
+        private readonly ILocaleRegistry localeRegistry;
         private bool isInitialized = false;
         private MessageTextReplacer messageTextReplacer;
         private readonly IReadOnlyCollection<TextReplaceStrategy> DefaultReplaceStrategies = new ReadOnlyCollection<TextReplaceStrategy>(
@@ -21,9 +23,10 @@ namespace TansanMilMil.Util
 
         public bool IsInitialized => isInitialized;
 
-        public LocaleService(ILocaleConfigProvider configProvider, IEnumerable<TextReplaceStrategy> textReplaceStrategies = null)
+        public LocaleService(ILocaleConfigProvider configProvider, ILocaleRegistry localeRegistry, IEnumerable<TextReplaceStrategy> textReplaceStrategies = null)
         {
             this.configProvider = configProvider ?? throw new ArgumentNullException(nameof(configProvider));
+            this.localeRegistry = localeRegistry ?? throw new ArgumentNullException(nameof(localeRegistry));
 
             IEnumerable<TextReplaceStrategy> strategies = textReplaceStrategies ?? DefaultReplaceStrategies;
             messageTextReplacer = new MessageTextReplacer(strategies);
@@ -49,20 +52,21 @@ namespace TansanMilMil.Util
 
         private void InitializeAvailableLocales()
         {
-            var enLocale = GetLocaleByName(CultureInfoName.EN_US);
-            var jpLocale = GetLocaleByName(CultureInfoName.JA_JP);
+            localeRegistry.Initialize();
 
-            if (enLocale == null || jpLocale == null)
+            var availableLocales = localeRegistry.GetAvailableLocales();
+            if (availableLocales.Count == 0)
             {
-                throw new InvalidOperationException("Required locales (en-US, ja-JP) not found in LocalizationSettings");
+                Debug.LogWarning("No locales found in LocalizationSettings. Localization may not work properly.");
             }
-
-            AvailableLocales.Initialize(enLocale, jpLocale);
+            else
+            {
+                Debug.Log($"Initialized with {availableLocales.Count} available locales: {string.Join(", ", availableLocales.Select(l => l.Identifier.CultureInfo.Name))}");
+            }
         }
 
         private void LoadAndApplyStoredLocale()
         {
-            configProvider.LoadConfig();
             string storedCultureName = configProvider.GetStoredCultureInfoName();
 
             if (!string.IsNullOrEmpty(storedCultureName))
@@ -112,12 +116,12 @@ namespace TansanMilMil.Util
             if (string.IsNullOrWhiteSpace(cultureInfoName))
                 throw new ArgumentException("CultureInfoName cannot be null or whitespace", nameof(cultureInfoName));
 
-            Locale locale = GetLocaleByName(cultureInfoName);
+            Locale locale = localeRegistry.GetLocaleBy(cultureInfoName);
 
             if (locale == null)
             {
-                Debug.LogError($"Locale with culture info '{cultureInfoName}' not found. Falling back to default locale.");
-                locale = LocaleSettings.DefaultLocale;
+                Debug.LogError($"Locale with culture info '{cultureInfoName}' not found. Available locales: {string.Join(", ", GetAvailableLocales())}. Falling back to default locale.");
+                locale = localeRegistry.GetDefaultLocale();
 
                 if (locale == null)
                 {
@@ -135,9 +139,8 @@ namespace TansanMilMil.Util
 
             LocalizationSettings.SelectedLocale = locale;
 
-            // Save the new locale setting
-            var cultureInfoName = locale.Identifier.CultureInfo.Name;
-            configProvider.SaveCultureInfoName(cultureInfoName);
+            string cultureInfoName = locale.Identifier.CultureInfo.Name;
+            configProvider.SetCultureInfoName(cultureInfoName);
 
             Debug.Log($"Locale changed to: {cultureInfoName}");
         }
@@ -149,14 +152,18 @@ namespace TansanMilMil.Util
 
         public string GetCurrentCultureInfoName()
         {
-            var currentLocale = GetCurrentLocale();
+            Locale currentLocale = GetCurrentLocale();
             return currentLocale?.Identifier.CultureInfo.Name ?? string.Empty;
         }
 
-        private Locale GetLocaleByName(string cultureInfoName)
+        public IReadOnlyList<Locale> GetAvailableLocales()
         {
-            return LocalizationSettings.AvailableLocales.Locales
-                .Find(locale => locale.Identifier.CultureInfo.Name == cultureInfoName);
+            return localeRegistry.GetAvailableLocales();
+        }
+
+        public bool IsLocaleSupported(string cultureInfoName)
+        {
+            return localeRegistry.IsLocaleSupported(cultureInfoName);
         }
     }
 }

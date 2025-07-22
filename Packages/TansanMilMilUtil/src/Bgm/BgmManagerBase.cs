@@ -34,7 +34,6 @@ namespace TansanMilMil.Util
 
         private void Start()
         {
-            ConfigSaveDataManager.GetInstance().LoadIfRequired();
             SetMixerVolume(PlayerConfigManager.GetInstance().GetConfig().bgmVolume);
 
             StartExtensionAsync();
@@ -77,7 +76,8 @@ namespace TansanMilMil.Util
             if (audioSource.time >= currentMusic.loopEndTime || (!audioSource.isPlaying && audioSource.time == 0))
             {
                 audioSource.time = currentMusic.loopStartTime;
-                if (!audioSource.isPlaying) audioSource.Play();
+                if (!audioSource.isPlaying)
+                    audioSource.Play();
             }
         }
 

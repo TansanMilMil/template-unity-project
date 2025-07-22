@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using R3;
@@ -14,7 +15,6 @@ namespace TansanMilMil.Util
         private void Start()
         {
             SetCreditsText();
-
             startScrolling = true;
         }
 
@@ -28,8 +28,15 @@ namespace TansanMilMil.Util
 
         private void SetCreditsText()
         {
+            List<Credit> credits = GetCredits();
+            if (credits == null || credits.Count == 0)
+            {
+                creditsText.text = "No credits available";
+                return;
+            }
+
             string text = "";
-            Credits.List.GroupBy(credit => credit.assetType).ToList().ForEach(group =>
+            credits.GroupBy(credit => credit.assetType).ToList().ForEach(group =>
             {
                 text += $"<b>- {group.Key} -</b>\n\n";
 
@@ -42,6 +49,21 @@ namespace TansanMilMil.Util
             });
 
             creditsText.text = text;
+        }
+
+        /// <summary>
+        /// クレジットリストを取得
+        /// プロバイダーが登録されていればそれを使用し、なければデフォルトを使用
+        /// </summary>
+        private List<Credit> GetCredits()
+        {
+            if (!CreditProviderRegistry.GetInstance().IsProviderRegistered())
+            {
+                throw new System.Exception("CreditProvider is not registered. Please register a provider before using CreditsScroller.");
+            }
+
+            ICreditProvider provider = CreditProviderRegistry.GetInstance().GetProvider();
+            return provider?.GetCredits();
         }
 
         public void Hide()

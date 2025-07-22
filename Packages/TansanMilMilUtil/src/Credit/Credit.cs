@@ -15,24 +15,4 @@ namespace TansanMilMil.Util
             this.memo = memo;
         }
     }
-
-    public enum AssetType
-    {
-        Scenario,
-        Graphics,
-        Musics,
-        Sounds,
-        Scripts,
-        Fonts,
-        Tools,
-        SpecialThanks,
-    }
-
-    public enum LicenseType
-    {
-        StandardUnityAssetStoreEULA,
-        MIT,
-        Original,
-        None,
-    }
 }

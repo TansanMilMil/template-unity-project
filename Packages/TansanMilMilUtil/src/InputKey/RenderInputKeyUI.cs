@@ -16,18 +16,22 @@ namespace TansanMilMil.Util
         [SerializeField] private Image inputKeyBackgroundImage;
         [SerializeField] private Image inputKeyImage;
         [SerializeField] private InputKeyBindConditions bindConditions = InputKeyBindConditions.All;
-        // 基本的にゲーム中ずっと必要なSpriteを保持するはずなので SpriteKeeper.ReleaseAllAssets() はしない。メモリの問題が出てきたら要検討。
-        private static AssetsKeeper<Sprite> SpriteKeeper = AssetsTypeSettings.NewAssetsKeeper<Sprite>();
+        /// <summary>
+        /// 基本的にゲーム中ずっとUIのSpriteは必要になるはずなので SpriteKeeper.ReleaseAllAssets() はしてない。メモリの問題が出てきたら要検討。
+        /// </summary>
+        private static AssetsKeeper<Sprite> SpriteKeeper;
 
         private void Start()
         {
             RenderKeyNameAndSpriteAsync(this.GetCancellationTokenOnDestroy()).Forget();
+
+            SpriteKeeper = new AssetsKeeperFactory(AssetsTypeSettingRegistry.GetAssetsTypeSetting()).Create<Sprite>();
         }
 
         private async UniTask RenderKeyNameAndSpriteAsync(CancellationToken cToken = default)
         {
             cToken.ThrowIfCancellationRequested();
-            
+
             if (inputKeyImage != null)
             {
                 inputKeyImage.enabled = false;
@@ -39,7 +43,7 @@ namespace TansanMilMil.Util
 
             // 文字で表現できないKeyCodeがあるのでImageを優先的に表示させる
             bool imageRendered = await RenderKeyImageAsync(cToken);
-            
+
             cToken.ThrowIfCancellationRequested();
             if (imageRendered && renderOnlyOne)
             {
@@ -53,7 +57,7 @@ namespace TansanMilMil.Util
         private async UniTask<bool> RenderKeyImageAsync(CancellationToken cToken = default)
         {
             cToken.ThrowIfCancellationRequested();
-            
+
             if (inputKeyImage != null)
             {
                 string spritePath = InputKeys.GetInstance().GetSingleKeySpritePathForUI(inputKeyType, bindConditions);
@@ -61,7 +65,7 @@ namespace TansanMilMil.Util
                 {
                     inputKeyImage.enabled = false;
                     inputKeyImage.sprite = await SpriteKeeper.LoadAssetAsync(spritePath, cToken);
-                    
+
                     cToken.ThrowIfCancellationRequested();
                     inputKeyImage.enabled = true;
 

@@ -15,7 +15,7 @@ namespace TansanMilMil.Util
         /// trueにするとAssetをLoadした際に古いcacheをReleaseする
         /// </summary>
         protected bool autoRelease;
-        private const int AutoReleaseOldAssets = 5;
+        protected int autoReleaseOldAssets = 5;
 
         public ReadOnlyCollection<AddressablesKeeperItem<T>> GetCaches()
         {
@@ -67,7 +67,7 @@ namespace TansanMilMil.Util
         {
             if (autoRelease)
             {
-                ReleaseOldAssets(AutoReleaseOldAssets);
+                ReleaseOldAssets(autoReleaseOldAssets);
             }
         }
 

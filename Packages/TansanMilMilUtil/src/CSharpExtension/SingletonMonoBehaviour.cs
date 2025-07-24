@@ -110,6 +110,11 @@ namespace TansanMilMil.Util
             OnSingletonStart();
         }
 
+        private void Update()
+        {
+            OnSingletonUpdate();
+        }
+
         /// <summary>
         /// Unity OnDestroy メソッド
         /// </summary>
@@ -157,6 +162,15 @@ namespace TansanMilMil.Util
         protected virtual void OnSingletonStart()
         {
             // Startメソッドのオーバーライド用
+        }
+
+        /// <summary>
+        /// シングルトンが更新される時に呼び出されるメソッド
+        /// 子クラスで独自の更新処理を実装する場合にオーバーライド
+        /// </summary>
+        protected virtual void OnSingletonUpdate()
+        {
+            // Updateメソッドのオーバーライド用
         }
 
         /// <summary>

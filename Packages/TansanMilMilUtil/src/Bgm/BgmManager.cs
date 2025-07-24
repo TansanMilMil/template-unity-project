@@ -6,6 +6,7 @@ using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
 using R3;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -16,7 +17,7 @@ namespace TansanMilMil.Util
     /// </summary>
     [RequireComponent(typeof(AudioSource))]
     [DefaultExecutionOrder(-20)]
-    public class BgmManager : MonoBehaviour, IIgnoreVacuumComponent
+    public class BgmManager : SingletonMonoBehaviour<BgmManager>, IIgnoreVacuumComponent
     {
         [SerializeField] private AudioMixer bgmAudioMixer;
         public AudioSource audioSource;
@@ -29,51 +30,17 @@ namespace TansanMilMil.Util
         public const float MinVolume = -40;
         private const float AudioMixerMinVolume = -80;
 
-        private static GameObject Instance;
-        private static BgmManager InstanceComponent;
-        public static float TimeBeforeMovingScene = 0;
-        private static AssetsKeeper<AudioClip> AudioKeeper = AssetsTypeSettings.NewAssetsKeeper<AudioClip>(autoRelease: true);
+        public float timeBeforeMovingScene = 0;
+        private AssetsKeeper<AudioClip> audioKeeper;
 
-        private BgmManager() { }
-
-        public static BgmManager GetInstance()
-        {
-            if (Instance == null)
-            {
-                throw new Exception("BgmManager.Instance is null!");
-            }
-            if (InstanceComponent == null)
-            {
-                throw new Exception("BgmManager.InstanceComponent is null!");
-            }
-            return InstanceComponent;
-        }
-
-        private void Awake()
-        {
-            if (Instance != null)
-            {
-                // すでにロードされていたら自分自身を破棄して終了
-                Destroy(gameObject);
-                return;
-            }
-            else
-            {
-                // ロードされていなかったら、フラグをロード済みに設定する
-                Instance = gameObject;
-                InstanceComponent = gameObject.GetComponent<BgmManager>();
-                // ルート階層にないとDontDestroyOnLoadできないので強制移動させる
-                gameObject.transform.parent = null;
-                DontDestroyOnLoad(gameObject);
-            }
-        }
-
-        private void Start()
+        protected override void OnSingletonStart()
         {
             SetMixerVolume(PlayerConfigManager.GetInstance().GetConfig().bgmVolume);
+
+            audioKeeper = new AssetsKeeperFactory(AssetsTypeSettingRegistry.GetAssetsTypeSetting()).Create<AudioClip>(autoRelease: true);
         }
 
-        private void Update()
+        protected override void OnSingletonUpdate()
         {
             if (audioSource != null && audioSource.clip != null)
             {
@@ -81,27 +48,27 @@ namespace TansanMilMil.Util
             }
         }
 
-        public static void ResetStaticParams()
+        public void ResetStaticParams()
         {
-            TimeBeforeMovingScene = 0;
+            timeBeforeMovingScene = 0;
         }
 
         public async UniTask<AudioClip> LoadAssetAsync(string bgmPath, CancellationToken cToken = default)
         {
             cToken.ThrowIfCancellationRequested();
-            
-            AudioClip audioClip = await AudioKeeper.LoadAssetAsync(bgmPath, cToken);
+
+            AudioClip audioClip = await audioKeeper.LoadAssetAsync(bgmPath, cToken);
             return audioClip;
         }
 
         public void ReleaseAsset(string bgmPath)
         {
-            AudioKeeper.ReleaseAsset(bgmPath);
+            audioKeeper.ReleaseAsset(bgmPath);
         }
 
         public void ReleaseAllAssets()
         {
-            AudioKeeper.ReleaseAllAssets();
+            audioKeeper.ReleaseAllAssets();
         }
 
         public float GetMixerVolume()
@@ -188,15 +155,15 @@ namespace TansanMilMil.Util
         public async UniTask PlayByPathAsync(string bgmPath, float startTime = Bgm.NoTimeSetting, CancellationToken cToken = default)
         {
             cToken.ThrowIfCancellationRequested();
-            
+
             if (bgmPath == BgmFactory.GetInstance().Create(bgmPath).filePath)
             {
                 Stop();
                 return;
             }
-            
+
             AudioClip audio = await LoadAssetAsync(bgmPath, cToken);
-            
+
             cToken.ThrowIfCancellationRequested();
             Play(audio, startTime);
         }
@@ -204,7 +171,7 @@ namespace TansanMilMil.Util
         public async UniTask<bool> PlayWithFadeInAsync(AudioClip audioClip = null, float duration = 1.0f, float startTime = Bgm.NoTimeSetting, CancellationToken cToken = default)
         {
             cToken.ThrowIfCancellationRequested();
-            
+
             KillAllAsyncEffect();
             SetUp(audioClip, startTime);
             audioSource.volume = 0;
@@ -228,7 +195,7 @@ namespace TansanMilMil.Util
         public async UniTask<bool> FadeOutAsync(float duration = 1.0f, CancellationToken cToken = default)
         {
             cToken.ThrowIfCancellationRequested();
-            
+
             KillAllAsyncEffect();
             fadeOut = DOTween.To(() => audioSource.volume, (x) => audioSource.volume = x, 0f, duration).SetEase(Ease.Linear);
             await fadeOut.WithCancellation(cToken);

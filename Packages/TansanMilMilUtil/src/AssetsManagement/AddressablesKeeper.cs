@@ -10,20 +10,14 @@ namespace TansanMilMil.Util
 {
     public class AddressablesKeeper<T> : AssetsKeeper<T> where T : UnityEngine.Object
     {
-        private readonly IAddressablesWrapper<T> addressablesWrapper;
+        private readonly IAddressablesWrapper<T> addressablesWrapper = AddressablesWrapper<T>.GetInstance();
 
-        public AddressablesKeeper(bool autoRelease = false, IAddressablesWrapper<T> addressablesWrapper = null)
+        public AddressablesKeeper(bool autoRelease, int autoReleaseOldAssets)
         {
             this.autoRelease = autoRelease;
-            if (addressablesWrapper == null)
-            {
-                this.addressablesWrapper = AddressablesWrapper<T>.GetInstance();
-            }
-            else
-            {
-                this.addressablesWrapper = addressablesWrapper;
-            }
+            this.autoReleaseOldAssets = autoReleaseOldAssets;
         }
+
         protected override async UniTask<T> LoadFromAssetAsync(string pathName, CancellationToken cToken = default)
         {
             cToken.ThrowIfCancellationRequested();

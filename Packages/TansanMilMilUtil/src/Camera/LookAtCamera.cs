@@ -15,7 +15,7 @@ namespace TansanMilMil.Util
 
         private void Start()
         {
-            mainCamera = GameObjectHolder.GetInstance().FindComponentBy<Camera>(GameObjectHolder.GetInstance().FindObjectBy("MainCamera"));
+            mainCamera = Camera.main;
         }
 
         private void Update()

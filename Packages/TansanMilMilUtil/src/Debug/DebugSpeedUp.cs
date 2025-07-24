@@ -7,10 +7,12 @@ namespace TansanMilMil.Util
     {
         private float timeScale = 1.0f;
         private bool toggle = false;
+        [SerializeField]
+        private KeyCode triggerKey = KeyCode.F2;
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.F2))
+            if (Input.GetKeyDown(triggerKey))
             {
                 toggle = !toggle;
                 if (toggle)

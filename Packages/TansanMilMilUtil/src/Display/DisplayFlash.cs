@@ -8,53 +8,20 @@ using UnityEngine.UI;
 namespace TansanMilMil.Util
 {
     [DefaultExecutionOrder(-10)]
-    public class DisplayFlash : MonoBehaviour, IIgnoreVacuumComponent
+    public class DisplayFlash : SingletonMonoBehaviour<DisplayFlash>, IIgnoreVacuumComponent
     {
-        private static GameObject Instance;
-        private static DisplayFlash InstanceComponent;
-        public GameObject flashObj;
-        public Image flash;
-        private readonly Color DefaultColor = new Color(1, 1, 1, 1);
-
-        private DisplayFlash() { }
-
-        public static DisplayFlash GetInstance()
-        {
-            if (Instance == null)
-            {
-                throw new Exception("DisplayFlash.Instance is null!");
-            }
-            if (InstanceComponent == null)
-            {
-                throw new Exception("DisplayFlash.InstanceComponent is null!");
-            }
-            return InstanceComponent;
-        }
-
-        private void Awake()
-        {
-            if (Instance != null)
-            {
-                // すでにロードされていたら自分自身を破棄して終了
-                Destroy(gameObject);
-                return;
-            }
-            else
-            {
-                // ロードされていなかったら、フラグをロード済みに設定する
-                Instance = gameObject;
-                InstanceComponent = gameObject.GetComponent<DisplayFlash>();
-                // ルート階層にないとDontDestroyOnLoadできないので強制移動させる
-                gameObject.transform.parent = null;
-                DontDestroyOnLoad(gameObject);
-            }
-        }
+        [SerializeField]
+        private GameObject flashObj;
+        [SerializeField]
+        private Image flash;
+        [SerializeField]
+        private Color defaultColor = new Color(1, 1, 1, 1);
 
         public async UniTask FlashAsync(float duration = 0.8f, Color? flashColor = null, CancellationToken cToken = default)
         {
             cToken.ThrowIfCancellationRequested();
 
-            flash.color = flashColor == null ? DefaultColor : (Color)flashColor;
+            flash.color = flashColor == null ? defaultColor : (Color)flashColor;
             Color targetColor = new Color(flash.color.r, flash.color.g, flash.color.b, 0);
             flashObj.SetActive(true);
             await flash.DOColor(targetColor, duration).WithCancellation(cToken);
@@ -65,7 +32,7 @@ namespace TansanMilMil.Util
         {
             cToken.ThrowIfCancellationRequested();
 
-            Color targetColor = flashColor == null ? DefaultColor : (Color)flashColor;
+            Color targetColor = flashColor == null ? defaultColor : (Color)flashColor;
             flash.color = new Color(targetColor.r, targetColor.g, targetColor.b, 0);
             flashObj.SetActive(true);
             await flash.DOColor(targetColor, duration).WithCancellation(cToken);
@@ -75,7 +42,7 @@ namespace TansanMilMil.Util
         {
             cToken.ThrowIfCancellationRequested();
 
-            Color targetColor = flashColor == null ? DefaultColor : (Color)flashColor;
+            Color targetColor = flashColor == null ? defaultColor : (Color)flashColor;
             flash.color = new Color(targetColor.r, targetColor.g, targetColor.b, 1);
             flashObj.SetActive(true);
             await flash.DOColor(new Color(targetColor.r, targetColor.g, targetColor.b, 0), duration).WithCancellation(cToken);

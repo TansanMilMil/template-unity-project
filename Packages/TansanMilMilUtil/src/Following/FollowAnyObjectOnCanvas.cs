@@ -4,10 +4,14 @@ namespace TansanMilMil.Util
 {
     public class FollowAnyObjectOnCanvas : MonoBehaviour
     {
-        public Transform target;
-        public Vector2 correctionPos;
-        public RectTransform canvasRect;
-        public FollowType followType = FollowType.EveryUpdate;
+        [SerializeField]
+        private Transform target;
+        [SerializeField]
+        private Vector2 correctionPos;
+        [SerializeField]
+        private RectTransform canvasRect;
+        [SerializeField]
+        private FollowType followType = FollowType.EveryUpdate;
         public enum FollowType
         {
             EveryUpdate,
@@ -16,12 +20,14 @@ namespace TansanMilMil.Util
 
         private void Start()
         {
-            if (followType == FollowType.OnlyOnce) FollowOnce();
+            if (followType == FollowType.OnlyOnce)
+                FollowOnce();
         }
 
         private void Update()
         {
-            if (followType == FollowType.EveryUpdate) Follow();
+            if (followType == FollowType.EveryUpdate)
+                Follow();
         }
 
         public void FollowOnce()

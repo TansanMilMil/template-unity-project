@@ -4,16 +4,20 @@ namespace TansanMilMil.Util
 {
     public class FollowObjectSmoothly : MonoBehaviour
     {
-        public GameObject target;
-        public float speed = 1.0f;
-        public Vector3 posCorrection = Vector3.zero;
+        [SerializeField]
+        private GameObject target;
+        [SerializeField]
+        private float speed = 1.0f;
+        [SerializeField]
+        private Vector3 posCorrection = Vector3.zero;
         public enum FollowType
         {
             Normal,
             FuwaFuwa,
             BuruBuru,
         }
-        public FollowType followType = FollowType.Normal;
+        [SerializeField]
+        private FollowType followType = FollowType.Normal;
         private const float DefaultFuwafuwaInterval = 1.0f;
         private float fuwafuwaInterval = 0;
         private Vector3 fuwafuwaCorrection = Vector3.zero;
@@ -21,12 +25,14 @@ namespace TansanMilMil.Util
 
         void Start()
         {
-            if (target != null) StartFollowing();
+            if (target != null)
+                StartFollowing();
         }
 
         void Update()
         {
-            if (target == null || !following) return;
+            if (target == null || !following)
+                return;
 
             switch (followType)
             {
@@ -56,15 +62,20 @@ namespace TansanMilMil.Util
 
         public void ChangeParams(GameObject target = null, float speed = -1, Vector3? posCorrection = null, FollowType followType = FollowType.Normal)
         {
-            if (target != null) this.target = target;
-            if (speed != -1) this.speed = speed;
-            if (posCorrection != null) this.posCorrection = (Vector3)posCorrection;
-            if (followType != FollowType.Normal) this.followType = followType;
+            if (target != null)
+                this.target = target;
+            if (speed != -1)
+                this.speed = speed;
+            if (posCorrection != null)
+                this.posCorrection = (Vector3)posCorrection;
+            if (followType != FollowType.Normal)
+                this.followType = followType;
         }
 
         private Vector3 CalcNormalPos(Vector3 position)
         {
-            return Vector3.Lerp(position, target.transform.position + posCorrection, Time.deltaTime * speed); ;
+            return Vector3.Lerp(position, target.transform.position + posCorrection, Time.deltaTime * speed);
+            ;
         }
 
         private Vector3 CalcFuwaFuwaPos(Vector3 position)

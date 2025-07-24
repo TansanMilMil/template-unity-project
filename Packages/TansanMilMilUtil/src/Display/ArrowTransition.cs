@@ -9,8 +9,10 @@ namespace TansanMilMil.Util
 {
     public class ArrowTransition : MonoBehaviour
     {
-        public List<GameObject> leftArrows;
-        public List<GameObject> rightArrows;
+        [SerializeField]
+        private List<GameObject> leftArrows;
+        [SerializeField]
+        private List<GameObject> rightArrows;
         private Sequence tween;
         private const float leftStartPosX = -250f;
         private const float leftEndPosX = 180;

@@ -10,7 +10,8 @@ namespace TansanMilMil.Util
 {
     public class Backdrop : MonoBehaviour
     {
-        public Image transition;
+        [SerializeField]
+        private Image transition;
 
         private void Update()
         {
@@ -36,10 +37,10 @@ namespace TansanMilMil.Util
         public async UniTask FadeAsync(float alpha, float duration = 0.7f, CancellationToken cToken = default)
         {
             cToken.ThrowIfCancellationRequested();
-            
+
             transition.transform.localScale = Vector3.one;
             await transition.DOColor(new Color(0, 0, 0, alpha), duration).WithCancellation(cToken);
-            
+
             cToken.ThrowIfCancellationRequested();
             if (alpha == 0)
                 transition.transform.localScale = Vector3.zero;

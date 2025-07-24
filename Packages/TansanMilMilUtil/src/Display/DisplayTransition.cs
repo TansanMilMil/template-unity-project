@@ -10,9 +10,15 @@ namespace TansanMilMil.Util
     [DefaultExecutionOrder(-10)]
     public class DisplayTransition : MonoBehaviour, IIgnoreVacuumComponent
     {
-        public Image transition;
+        [SerializeField]
+        private Image transition;
         private Tweener tween;
-        public ArrowTransition arrowTransition;
+        [SerializeField]
+        private ArrowTransition arrowTransition;
+        [SerializeField]
+        private Color defaultColor = Color.black;
+
+
         private void Start()
         {
             SetInitSubscriber();
@@ -54,7 +60,7 @@ namespace TansanMilMil.Util
         {
             cToken.ThrowIfCancellationRequested();
 
-            Color changeColor = color ?? Color.black;
+            Color changeColor = color ?? defaultColor;
             KillPrevAnimation();
 
             transition.color = Color.clear;
@@ -67,7 +73,7 @@ namespace TansanMilMil.Util
         {
             KillPrevAnimation();
 
-            transition.color = color == null ? Color.black : (Color)color;
+            transition.color = color == null ? defaultColor : (Color)color;
             transition.transform.localScale = Vector3.one;
         }
 
@@ -75,7 +81,7 @@ namespace TansanMilMil.Util
         {
             cToken.ThrowIfCancellationRequested();
 
-            Color changeColor = color ?? Color.black;
+            Color changeColor = color ?? defaultColor;
             KillPrevAnimation();
 
             transition.color = changeColor;

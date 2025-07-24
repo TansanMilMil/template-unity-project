@@ -7,6 +7,7 @@ namespace TansanMilMil.Util
     /// カメラのアスペクト比をリアルタイムに固定する。
     /// このComponentとアタッチしてもCanvas側で左寄せ、右寄せなどのAnchor指定をしているとUIがズレるので注意。
     /// </summary>
+    [RequireComponent(typeof(Camera))]
     public class FixedCameraAspect : MonoBehaviour
     {
         [Header("アスペクト比の設定: 16:9なら16と9を入力")]
@@ -16,7 +17,8 @@ namespace TansanMilMil.Util
         [Range(1, 16)]
         [SerializeField]
         private float y_aspect = 9.0f;
-        public Camera mainCamera;
+        [SerializeField]
+        private Camera mainCamera;
         private Vector2 resolution;
 
         void Awake()

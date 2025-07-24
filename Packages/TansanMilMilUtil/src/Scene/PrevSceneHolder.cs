@@ -13,10 +13,7 @@ namespace TansanMilMil.Util
         /// <summary>
         /// 現在のSceneがloadされる前に表示していたScene名たち。
         /// </summary>
-        public ReadOnlyCollection<string> prevScenes
-        {
-            get { return _prevScenes.AsReadOnly(); }
-        }
+        public ReadOnlyCollection<string> GetPrevScenes => _prevScenes.AsReadOnly();
 
         private void Start()
         {

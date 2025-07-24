@@ -5,7 +5,7 @@ namespace TansanMilMil.Util
     public static class TimeScaleManager
     {
         private static float addTimeVal = 0f;
-        public const float DefaultTimeScale = 1.0f;
+        private const float DefaultTimeScale = 1.0f;
         private const float MaxTimeScale = 10.0f;
         private const float MinTimeScale = 0;
 

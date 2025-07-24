@@ -71,7 +71,7 @@ namespace TansanMilMil.Util
             _onPause.OnNext(true);
         }
 
-        public void UnPause()
+        public void Resume()
         {
             _onPause.OnNext(false);
         }

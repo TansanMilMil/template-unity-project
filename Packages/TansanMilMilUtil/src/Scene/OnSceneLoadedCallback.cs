@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using R3;
@@ -9,7 +10,7 @@ namespace TansanMilMil.Util
 {
     public class OnSceneLoadedCallback : SingletonMonoBehaviour<OnSceneLoadedCallback>
     {
-        private Func<UniTask> callbackAsync;
+        private readonly List<Func<UniTask>> callbacksAsync = new List<Func<UniTask>>();
         private Subject<bool> _onSceneChanged = new Subject<bool>();
         public Observable<bool> OnSceneChanged => _onSceneChanged;
 
@@ -21,7 +22,7 @@ namespace TansanMilMil.Util
         protected override void OnSingletonDestroy()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
-            callbackAsync = null;
+            callbacksAsync.Clear();
         }
 
         /// <summary>
@@ -29,7 +30,7 @@ namespace TansanMilMil.Util
         /// </summary>
         public void SetCallbackAfterSceneLoaded(Func<UniTask> func)
         {
-            callbackAsync = func;
+            callbacksAsync.Add(func);
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -42,10 +43,16 @@ namespace TansanMilMil.Util
         {
             cToken.ThrowIfCancellationRequested();
 
-            if (callbackAsync != null)
+            if (callbacksAsync != null)
             {
-                await callbackAsync();
-                callbackAsync = null;
+                foreach (var callback in callbacksAsync)
+                {
+                    cToken.ThrowIfCancellationRequested();
+
+                    Debug.Log($"OnSceneLoadedCallback: Executing callback for scene load: {callback.Method.Name}");
+                    await callback();
+                }
+                callbacksAsync.Clear();
             }
         }
     }

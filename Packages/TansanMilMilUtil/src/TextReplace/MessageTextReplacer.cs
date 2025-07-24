@@ -5,7 +5,7 @@ namespace TansanMilMil.Util
 {
     internal class MessageTextReplacer
     {
-        public event Func<string, string> replaceText;
+        private event Func<string, string> replaceText;
 
         public MessageTextReplacer(IEnumerable<TextReplaceStrategy> strategies)
         {

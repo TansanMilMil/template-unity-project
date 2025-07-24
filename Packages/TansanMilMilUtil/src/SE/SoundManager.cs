@@ -10,11 +10,12 @@ namespace TansanMilMil.Util
     [DefaultExecutionOrder(-10)]
     public class SoundManager : MonoBehaviour, IIgnoreVacuumComponent
     {
-        [SerializeField] private AudioMixer soundAudioMixer;
+        [SerializeField]
+        private AudioMixer soundAudioMixer;
         private AudioSource audioSource;
-        public const string MixerSE = "MasterVolume";
-        public const float MaxVolume = 0;
-        public const float MinVolume = -40;
+        private const string MixerSE = "MasterVolume";
+        private const float MaxVolume = 0;
+        private const float MinVolume = -40;
         private const float AudioMixerMinVolume = -80;
 
         private void Start()
@@ -49,7 +50,7 @@ namespace TansanMilMil.Util
         public async UniTask PlayAsync(AudioClip se, CancellationToken cToken = default)
         {
             cToken.ThrowIfCancellationRequested();
-            
+
             audioSource.time = 0;
             audioSource.volume = 1;
             audioSource.PlayOneShot(se);

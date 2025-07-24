@@ -23,7 +23,7 @@ namespace TansanMilMil.Util
         private async UniTask InitGameLocaleAsync(CancellationToken cToken = default)
         {
             cToken.ThrowIfCancellationRequested();
-            
+
             await WaitDependenciesInitAsync(cToken);
 
             cToken.ThrowIfCancellationRequested();
@@ -36,7 +36,7 @@ namespace TansanMilMil.Util
         private async UniTask WaitDependenciesInitAsync(CancellationToken cToken = default)
         {
             cToken.ThrowIfCancellationRequested();
-            
+
             Debug.Log("Waiting for LocaleManager and ConfigSaveDataManager initialization...");
             await UniTask.WaitUntil(() =>
                 LocalizationSettings.InitializationOperation.IsDone &&

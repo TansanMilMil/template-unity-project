@@ -28,11 +28,11 @@ namespace TansanMilMil.Util
         private async UniTask InitializeAsync(CancellationToken cToken = default)
         {
             cToken.ThrowIfCancellationRequested();
-            
+
             try
             {
                 await localeService.InitializeAsync(cToken);
-                
+
                 cToken.ThrowIfCancellationRequested();
                 isInitialized = true;
                 gameObject.SetActive(false);
@@ -59,7 +59,7 @@ namespace TansanMilMil.Util
         public async UniTask<string> GetLocalizedStringAsync(LocaleString localeString, CancellationToken cToken = default)
         {
             cToken.ThrowIfCancellationRequested();
-            
+
             if (!IsInitialized)
             {
                 throw new InvalidOperationException("LocaleManager is not initialized.");

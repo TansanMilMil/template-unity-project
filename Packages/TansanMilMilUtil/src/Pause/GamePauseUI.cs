@@ -6,8 +6,10 @@ namespace TansanMilMil.Util
 {
     public class GamePauseUI : MonoBehaviour
     {
-        public GamePause gamePause;
-        public GameObject pauseObjects;
+        [SerializeField]
+        private GamePause gamePause;
+        [SerializeField]
+        private GameObject pauseObjects;
 
         void Start()
         {

@@ -10,18 +10,9 @@ namespace TansanMilMil.Util
     {
         private BehaviorSubject<bool> _onPaused = new BehaviorSubject<bool>(false);
         public Observable<bool> OnPaused => _onPaused;
-        [SerializeField] private AudioMixer bgmAudioMixer;
-        private float bgmAudioMixerVolume = 0;
-        [SerializeField] private AudioMixer soundAudioMixer;
-        private float soundAudioMixerVolume = 0;
-        private BgmManager bgmManager;
-        private SoundManager soundManager;
 
         void Start()
         {
-            bgmManager = GameObjectHolder.GetInstance().FindComponentBy<BgmManager>("BgmManager");
-            soundManager = GameObjectHolder.GetInstance().FindComponentBy<SoundManager>("SoundManager");
-
             SetInitSubscriber();
         }
 
@@ -41,20 +32,11 @@ namespace TansanMilMil.Util
                 {
                     if (paused)
                     {
-                        TimeScaleManager.SetTimeScale(0);
-
-                        bgmAudioMixerVolume = bgmManager.GetMixerVolume();
-                        bgmManager.SetMixerVolume(bgmAudioMixerVolume - 20);
-
-                        soundAudioMixerVolume = soundManager.GetMixerVolume();
-                        soundManager.SetMixerVolume(soundAudioMixerVolume - 20);
+                        PauseEventsRegistry.FireOnPauseEvents();
                     }
                     else
                     {
-                        TimeScaleManager.ResetTimeScale();
-
-                        bgmManager.SetMixerVolume(bgmAudioMixerVolume);
-                        soundManager.SetMixerVolume(soundAudioMixerVolume);
+                        PauseEventsRegistry.FireOnResumeEvents();
                     }
                 })
                 .AddTo(this.GetCancellationTokenOnDestroy());

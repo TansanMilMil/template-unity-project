@@ -1,3 +1,4 @@
+using Codice.CM.Common.Matcher;
 using Codice.CM.WorkspaceServer.DataStore.WkTree;
 using R3;
 using UnityEngine;
@@ -13,9 +14,14 @@ namespace TansanMilMil.Util
         public Observable<bool> SaveCompleted => _saveCompleted;
         private bool loadedInit = false;
         public bool LoadedInit => loadedInit;
+        private IKVStore store;
+        private string storeKey;
 
         protected override void OnSingletonStart()
         {
+            store = ConfigSaveDataStoreRegistry.GetConfigSaveDataStore();
+            storeKey = ConfigSaveDataStoreRegistry.GetStoreKey();
+
             LoadAsInit();
         }
 
@@ -27,7 +33,7 @@ namespace TansanMilMil.Util
                 .playerConfig(PlayerConfigManager.GetInstance().GetConfig())
                 .Build();
             string json = JsonUtility.ToJson(model);
-            PlayerPrefs.SetString(PlayerPrefsKeys.ConfigSaveData, json);
+            store.Upsert(storeKey, json);
             Debug.Log("ConfigSaveDataManager: save completed!");
 
             AfterSave();
@@ -40,7 +46,7 @@ namespace TansanMilMil.Util
 
         protected void Load()
         {
-            string json = PlayerPrefs.GetString(PlayerPrefsKeys.ConfigSaveData);
+            string json = store.Select(storeKey);
             ConfigSaveData saveData = JsonUtility.FromJson<ConfigSaveData>(json);
             SetStaticParams(saveData);
             loadedInit = true;

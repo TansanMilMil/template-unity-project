@@ -41,7 +41,7 @@ namespace TansanMilMil.Util
         private async UniTask DoCallbackAsync(CancellationToken cToken = default)
         {
             cToken.ThrowIfCancellationRequested();
-            
+
             if (callbackAsync != null)
             {
                 await callbackAsync();

@@ -8,32 +8,38 @@ namespace TansanMilMil.Util
 {
     public class SkipEvent : MonoBehaviour
     {
-        private const float Threshold = 0.6f;
+        /// <summary>
+        /// スキップをするまでの時間の閾値。
+        /// </summary>
+        [SerializeField]
+        private float threshold = 0.6f;
         private float pushSkipKeyTime = 0.0f;
-        [SerializeField] private GameObject wrapper;
-        [SerializeField] private Image thresholdImage;
         private bool skipKeyDown = false;
         private Subject<bool> _onSkipEvent = new Subject<bool>();
         public Observable<bool> OnSkipEvent => _onSkipEvent;
-        public bool observing { get; private set; } = false;
+        private BehaviorSubject<bool> _observing = new BehaviorSubject<bool>(false);
+        public Observable<bool> Observing => _observing;
 
-        private Subject<bool> StartObserve()
-        {
-            wrapper.SetActive(true);
-            observing = true;
-            return _onSkipEvent;
-        }
-
+        /// <summary>
+        /// スキップイベントの観測を開始し、引数で指定された非同期アクションにサブスクライブします。
+        /// </summary>
+        /// <param name="actionAsync">非同期アクション</param>
         public void StartObserveAndSubscribe(Func<UniTask> actionAsync)
         {
             StartObserve();
             SubscribeSkipEvent(actionAsync);
         }
 
+        private Observable<bool> StartObserve()
+        {
+            _observing.OnNext(true);
+            return OnSkipEvent;
+        }
+
         private void SubscribeSkipEvent(Func<UniTask> actionAsync)
         {
             _onSkipEvent
-                .Where(_ => observing)
+                .Where(_ => _observing.Value)
                 .Subscribe(async _ =>
                 {
                     try
@@ -51,19 +57,18 @@ namespace TansanMilMil.Util
         public void StopObserve()
         {
             pushSkipKeyTime = 0.0f;
-            wrapper.SetActive(false);
-            observing = false;
+            _observing.OnNext(false);
         }
 
         private void Update()
         {
-            if (!observing)
+            if (!_observing.Value)
                 return;
 
             if (InputKeys.GetInstance().AnyInputGetKey(KeyRole.Skip) || skipKeyDown)
             {
                 pushSkipKeyTime += Time.deltaTime;
-                if (pushSkipKeyTime > Threshold)
+                if (pushSkipKeyTime > threshold)
                 {
                     _onSkipEvent.OnNext(true);
                     pushSkipKeyTime = 0.0f;
@@ -74,23 +79,21 @@ namespace TansanMilMil.Util
             {
                 pushSkipKeyTime = 0.0f;
             }
-
-            RenderThreshold();
         }
 
-        public void OnButtonDown()
+        public void SkipKeyDown()
         {
             skipKeyDown = true;
         }
 
-        public void OnButtonUp()
+        public void SkipKeyUp()
         {
             skipKeyDown = false;
         }
 
-        private void RenderThreshold()
+        public float GetPushSkipKeyTimeRatio()
         {
-            thresholdImage.fillAmount = Mathf.Clamp(pushSkipKeyTime / Threshold, 0, 1);
+            return Mathf.Clamp(pushSkipKeyTime / threshold, 0, 1);
         }
     }
 }

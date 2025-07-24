@@ -5,17 +5,20 @@ namespace TansanMilMil.Util
     public class CustomMouseCursor : MonoBehaviour
     {
         private static bool SetCompleted = false;
-        [SerializeField] private Texture2D cursorTexture;
+        [SerializeField]
+        private Texture2D cursorTexture;
         private readonly Vector2 cursorHotspot = Vector2.zero;
 
         private void Start()
         {
             SetCusomCursor();
+            Destroy(this);
         }
 
         private void SetCusomCursor()
         {
-            if (SetCompleted) return;
+            if (SetCompleted)
+                return;
 
             Cursor.SetCursor(cursorTexture, cursorHotspot, CursorMode.Auto);
             SetCompleted = true;

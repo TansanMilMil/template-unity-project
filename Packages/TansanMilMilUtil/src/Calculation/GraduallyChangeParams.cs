@@ -9,7 +9,7 @@ namespace TansanMilMil.Util
     /// 徐々に変化する値を管理するクラス。
     /// WARNING: このクラスのインスタンスが不要になったらDispose()を呼ぶこと。
     /// </summary>
-    public class ChangeParamsOverTime
+    public class GraduallyChangeParams
     {
         private Subject<float> _valueChanged = new();
         public Observable<float> ValueChanged => _valueChanged;
@@ -18,7 +18,7 @@ namespace TansanMilMil.Util
         private float changeSpeed = 3;
         private IDisposable disposable;
 
-        public ChangeParamsOverTime(float targetValue, float changeSpeed = 0)
+        public GraduallyChangeParams(float targetValue, float changeSpeed = 0)
         {
             this.currentValue = targetValue;
             SetTargetValue(targetValue);
@@ -33,7 +33,7 @@ namespace TansanMilMil.Util
                 });
         }
 
-        ~ChangeParamsOverTime()
+        ~GraduallyChangeParams()
         {
             // Dispose忘れ防止としてデストラクタでDisposeする
             Dispose();

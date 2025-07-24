@@ -1,6 +1,6 @@
 namespace TansanMilMil.Util
 {
-    public enum AssetType
+    public enum CreditAssetType
     {
         Scenario,
         Graphics,

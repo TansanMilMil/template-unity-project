@@ -9,7 +9,12 @@ namespace TansanMilMil.Util
     /// </summary>
     public class FixedCameraAspect : MonoBehaviour
     {
+        [Header("アスペクト比の設定: 16:9なら16と9を入力")]
+        [Range(1, 16)]
+        [SerializeField]
         private float x_aspect = 16.0f;
+        [Range(1, 16)]
+        [SerializeField]
         private float y_aspect = 9.0f;
         public Camera mainCamera;
         private Vector2 resolution;

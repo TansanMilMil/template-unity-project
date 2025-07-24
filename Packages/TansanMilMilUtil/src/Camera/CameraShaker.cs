@@ -45,12 +45,12 @@ namespace TansanMilMil.Util
         public async UniTask ShakeAsync(float duration = 1.0f, float magnitude = 0.3f, float interval = 0.1f, CancellationToken cToken = default)
         {
             cToken.ThrowIfCancellationRequested();
-            
+
             this.duration = duration;
             this.magnitude = magnitude;
             this.interval = interval;
             basePos = mainCamera.transform.position;
-            
+
             await UniTask.Delay(Mathf.FloorToInt(duration * 1000), cancellationToken: cToken);
         }
 

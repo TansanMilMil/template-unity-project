@@ -17,6 +17,12 @@ namespace TansanMilMil.Util
         /// </summary>
         public void Initialize(List<Bgm> musics)
         {
+            if (musics.Exists(m => m.bgmType == BgmType.NotChangeBgm ||
+                m.bgmType == BgmType.StopBgm))
+            {
+                throw new System.ArgumentException("BgmType.NotChangeBgm and BgmType.StopBgm are reserved types and cannot be used in custom BGM definitions.");
+            }
+
             this.musics.AddRange(musics);
         }
 

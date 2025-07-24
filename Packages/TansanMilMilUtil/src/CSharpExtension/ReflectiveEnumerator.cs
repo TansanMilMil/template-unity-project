@@ -9,6 +9,10 @@ namespace TansanMilMil.Util
 {
     public class ReflectiveEnumerator
     {
+        /// <summary>
+        /// 指定された型のすべてのサブクラスのインスタンスを取得します。
+        /// </summary>
+        /// <typeparam name="T">基底クラスの型</typeparam>
         public static IEnumerable<T> GetAllSubClasses<T>(params object[] constructorArgs) where T : class
         {
             List<T> objects = new List<T>();

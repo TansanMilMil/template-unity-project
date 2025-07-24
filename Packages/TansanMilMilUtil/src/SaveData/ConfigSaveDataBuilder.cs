@@ -2,7 +2,7 @@ using TansanMilMil.Util;
 
 namespace TansanMilMil.Util
 {
-    public class ConfigSaveDataBuilder : IBuilder<ConfigSaveData>
+    public class ConfigSaveDataBuilder
     {
         private ConfigSaveData saveData = new ConfigSaveData();
 

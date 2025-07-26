@@ -44,6 +44,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: 2b11c18666827e1429b30b6deb8be269, type: 2}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -141,5 +142,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55f95888a7f4b6642b199a16ffc784b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmAudioMixer: {fileID: 24100000, guid: 2b11c18666827e1429b30b6deb8be269, type: 2}
+  bgmAudioMixer: {fileID: 24100000, guid: d243ca84d58f97040b577499f003b269, type: 2}
   audioSource: {fileID: 5146517143673051881}
+  timeBeforeMovingScene: 0

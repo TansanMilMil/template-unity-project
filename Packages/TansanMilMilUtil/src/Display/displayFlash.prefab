@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 6633704994773292001}
   - component: {fileID: 3514874091678904445}
   m_Layer: 5
-  m_Name: displayFlash
+  m_Name: DisplayFlash
   m_TagString: DisplayFlash
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -39,7 +39,7 @@ namespace TansanMilMil.Util
             string localeInConfig = playerConfigManager.GetConfig().cultureInfoName;
             localeManager.SetLocale(localeInConfig);
 
-            gameObject.SetActive(false);
+            Destroy(gameObject);
         }
 
         private async UniTask WaitDependenciesInitAsync(CancellationToken cToken = default)

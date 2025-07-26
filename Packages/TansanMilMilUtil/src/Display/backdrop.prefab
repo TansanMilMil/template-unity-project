@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 6232672942505330237}
   - component: {fileID: 2743083174575779979}
   m_Layer: 5
-  m_Name: backdrop
+  m_Name: Backdrop
   m_TagString: DisplayTransition
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

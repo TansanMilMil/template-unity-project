@@ -615,7 +615,7 @@ GameObject:
   - component: {fileID: 6749097678443144201}
   - component: {fileID: 3920879243167477281}
   m_Layer: 5
-  m_Name: displayTransition
+  m_Name: DisplayTransition
   m_TagString: DisplayTransition
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

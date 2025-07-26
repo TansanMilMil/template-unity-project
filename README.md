@@ -17,3 +17,9 @@
   - DOTween Pro
   - Rainbow Folders 2
   - Text Animator for Unity
+
+## TansanMilMilUtil
+
+import from below git URL in Unity Package Manager
+
+`https://github.com/TansanMilMil/template-unity-project.git?path=Packages/TansanMilMilUtil#util_latest`

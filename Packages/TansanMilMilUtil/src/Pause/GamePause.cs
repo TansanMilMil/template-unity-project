@@ -10,7 +10,7 @@ namespace TansanMilMil.Util
     {
         private BehaviorSubject<bool> _onPaused = new BehaviorSubject<bool>(false);
         public Observable<bool> OnPaused => _onPaused;
-        private IInputKeys inputKeys => InputKeys.GetInstance();
+        private IGamePauseKeyRegistory gamePauseKeyRegistory => GamePauseKeyRegistory.GetInstance();
         private IPauseEventsRegistry pauseEventsRegistry => PauseEventsRegistry.GetInstance();
 
         void Start()
@@ -21,7 +21,7 @@ namespace TansanMilMil.Util
         private void SetInitSubscriber()
         {
             IDisposable waitKey = Observable.EveryUpdate()
-                .Where(_ => inputKeys.AnyInputGetKeyDown(KeyRole.Pause))
+                .Where(_ => gamePauseKeyRegistory.GetGamePauseKey().GetKeyDown())
                 .Subscribe(_ =>
                 {
                     _onPaused.OnNext(!_onPaused.Value);

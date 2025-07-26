@@ -19,7 +19,7 @@ namespace TansanMilMil.Util
         public Observable<bool> OnSkipEvent => _onSkipEvent;
         private BehaviorSubject<bool> _observing = new BehaviorSubject<bool>(false);
         public Observable<bool> Observing => _observing;
-        private IInputKeys inputKeys => InputKeys.GetInstance();
+        private ISkipEventKeyResistory skipEventKeyResistory = SkipEventKeyResistory.GetInstance();
 
         /// <summary>
         /// スキップイベントの観測を開始し、引数で指定された非同期アクションにサブスクライブします。
@@ -66,7 +66,7 @@ namespace TansanMilMil.Util
             if (!_observing.Value)
                 return;
 
-            if (inputKeys.AnyInputGetKey(KeyRole.Skip) || skipKeyDown)
+            if (skipEventKeyResistory.GetSkipEventKey().GetKeyDown() || skipKeyDown)
             {
                 pushSkipKeyTime += Time.deltaTime;
                 if (pushSkipKeyTime > threshold)

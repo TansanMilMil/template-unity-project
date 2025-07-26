@@ -5,9 +5,10 @@ namespace TansanMilMil.Util
     [DefaultExecutionOrder(-30)]
     public class InputKeyBindsManager : MonoBehaviour
     {
+        private IInputKeys inputKeys => InputKeys.GetInstance();
         private void Start()
         {
-            InputKeys.GetInstance().InitKeyBinds();
+            inputKeys.InitKeyBinds();
         }
     }
 }

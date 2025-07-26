@@ -10,6 +10,7 @@ namespace TansanMilMil.Util
         private List<InputKeyBind> inputKeyBinds = new List<InputKeyBind>();
 
         public bool initialized { get; private set; } = false;
+        private ISupportedDevices supportedDevices => SupportedDevices.GetInstance();
         /// <returns>priorityの降順で<see cref="InputKeyBind"/>のReadOnlyCollectionを返す</returns>
         private IEnumerable<InputKeyBind> GetKeyBindsPriorityOrder(KeyRole keyRole, DeviceType deviceType, InputKeyBindConditions conditions)
         {
@@ -152,7 +153,7 @@ namespace TansanMilMil.Util
             {
                 foreach (DeviceType deviceType in Enum.GetValues(typeof(DeviceType)))
                 {
-                    if (!SupportedDevices.GetInstance().IsSupported(deviceType))
+                    if (!supportedDevices.IsSupported(deviceType))
                     {
                         continue;
                     }

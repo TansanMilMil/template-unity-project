@@ -32,12 +32,15 @@ namespace TansanMilMil.Util
 
         public float timeBeforeMovingScene = 0;
         private AssetsKeeper<AudioClip> audioKeeper;
+        private IBgmFactory bgmFactory = BgmFactory.GetInstance();
+        private IPlayerConfigManager playerConfigManager => PlayerConfigManager.GetInstance();
+        private IAssetsTypeSettingRegistry assetsTypeSettingRegistry => AssetsTypeSettingRegistry.GetInstance();
 
         protected override void OnSingletonStart()
         {
-            SetMixerVolume(PlayerConfigManager.GetInstance().GetConfig().bgmVolume);
+            SetMixerVolume(playerConfigManager.GetConfig().bgmVolume);
 
-            audioKeeper = new AssetsKeeperFactory(AssetsTypeSettingRegistry.GetAssetsTypeSetting()).Create<AudioClip>(autoRelease: true);
+            audioKeeper = new AssetsKeeperFactory(assetsTypeSettingRegistry.GetAssetsTypeSetting()).Create<AudioClip>(autoRelease: true);
         }
 
         protected override void OnSingletonUpdate()
@@ -112,7 +115,7 @@ namespace TansanMilMil.Util
         {
             if (audioClip != null)
             {
-                currentMusic = BgmFactory.GetInstance().Create(audioClip.name);
+                currentMusic = bgmFactory.Create(audioClip.name);
                 audioSource.clip = audioClip;
                 maxVolume = currentMusic.maxVolume;
                 audioSource.volume = currentMusic.maxVolume;
@@ -156,7 +159,7 @@ namespace TansanMilMil.Util
         {
             cToken.ThrowIfCancellationRequested();
 
-            if (bgmPath == BgmFactory.GetInstance().Create(bgmPath).filePath)
+            if (bgmPath == bgmFactory.Create(bgmPath).filePath)
             {
                 Stop();
                 return;

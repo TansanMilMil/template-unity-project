@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    public class PlayerConfigManager : Singleton<PlayerConfigManager>
+    public class PlayerConfigManager : Singleton<PlayerConfigManager>, IPlayerConfigManager
     {
         private PlayerConfig config = new();
         public bool LoadedInit { get; private set; } = false;

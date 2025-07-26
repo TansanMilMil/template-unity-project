@@ -8,6 +8,7 @@ namespace TansanMilMil.Util
         [SerializeField]
         private PlatformFrameRateConfig frameRateConfig;
         private static bool SetCompleted = false;
+        private IFrameRateManager frameRateManager => FrameRateManager.GetInstance();
 
         void Start()
         {
@@ -22,8 +23,8 @@ namespace TansanMilMil.Util
 
             if (frameRateConfig != null)
             {
-                FrameRateManager.Initialize(frameRateConfig);
-                FrameRateManager.ApplyFrameRateForCurrentPlatform();
+                frameRateManager.Initialize(frameRateConfig);
+                frameRateManager.ApplyFrameRateForCurrentPlatform();
             }
 
             SetCompleted = true;

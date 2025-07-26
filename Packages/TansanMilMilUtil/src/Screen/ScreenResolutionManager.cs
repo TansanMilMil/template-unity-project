@@ -2,20 +2,20 @@ using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    public static class ScreenResolutionManager
+    public class ScreenResolutionManager : Singleton<ScreenResolutionManager>, IScreenResolutionManager
     {
-        private static PlatformScreenResolutionConfig config;
-        private static bool isInitialized = false;
-        private static float InitScreenWidth = -1;
-        private static float InitScreenHeight = -1;
+        private PlatformScreenResolutionConfig config;
+        private bool isInitialized = false;
+        private float InitScreenWidth = -1;
+        private float InitScreenHeight = -1;
 
-        public static void Initialize(PlatformScreenResolutionConfig resolutionConfig)
+        public void Initialize(PlatformScreenResolutionConfig resolutionConfig)
         {
             config = resolutionConfig;
             isInitialized = true;
         }
 
-        public static void ApplyResolutionForCurrentPlatform()
+        public void ApplyResolutionForCurrentPlatform()
         {
             if (!isInitialized)
             {
@@ -27,7 +27,7 @@ namespace TansanMilMil.Util
             ApplyResolutionForPlatform(currentPlatform);
         }
 
-        private static void ApplyResolutionForPlatform(RuntimePlatform platform)
+        private void ApplyResolutionForPlatform(RuntimePlatform platform)
         {
             if (!isInitialized)
             {
@@ -54,7 +54,7 @@ namespace TansanMilMil.Util
             }
         }
 
-        private static void ChangeScreenResolution(float screenWidthRatio, float screenHeightRatio)
+        private void ChangeScreenResolution(float screenWidthRatio, float screenHeightRatio)
         {
             // 端末の消費電力を抑えるために解像度を調整する
             InitScreenWidth = Screen.width;
@@ -70,7 +70,7 @@ namespace TansanMilMil.Util
             Debug.Log($"SetResolution: {screenWidth}x{screenHeight}");
         }
 
-        private static void ResetInitScreenResolution()
+        private void ResetInitScreenResolution()
         {
             if (InitScreenWidth == -1 || InitScreenHeight == -1)
             {
@@ -82,7 +82,7 @@ namespace TansanMilMil.Util
             Debug.Log($"ResetInitScreenResolution: {InitScreenWidth}x{InitScreenHeight}");
         }
 
-        public static PlatformScreenResolutionConfig GetConfig()
+        public PlatformScreenResolutionConfig GetConfig()
         {
             return config;
         }

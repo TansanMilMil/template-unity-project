@@ -5,7 +5,7 @@ namespace TansanMilMil.Util
     /// <summary>
     /// クレジットプロバイダーを管理するレジストリ
     /// </summary>
-    public class CreditProviderRegistry : Singleton<CreditProviderRegistry>
+    public class CreditProviderRegistry : Singleton<CreditProviderRegistry>, ICreditProviderRegistry
     {
         private ICreditProvider _provider;
 

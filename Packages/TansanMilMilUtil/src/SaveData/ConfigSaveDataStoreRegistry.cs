@@ -1,17 +1,17 @@
 namespace TansanMilMil.Util
 {
-    public static class ConfigSaveDataStoreRegistry
+    public class ConfigSaveDataStoreRegistry : Singleton<ConfigSaveDataStoreRegistry>, IConfigSaveDataStoreRegistry
     {
-        private static IKVStore configSaveDataStore;
-        private static string storeKey;
+        private IKVStore configSaveDataStore;
+        private string storeKey;
 
-        public static void Initialize(IKVStore store, string key)
+        public void Initialize(IKVStore store, string key)
         {
             configSaveDataStore = store;
             storeKey = key;
         }
 
-        public static IKVStore GetConfigSaveDataStore()
+        public IKVStore GetConfigSaveDataStore()
         {
             if (configSaveDataStore == null)
             {
@@ -20,7 +20,7 @@ namespace TansanMilMil.Util
             return configSaveDataStore;
         }
 
-        public static string GetStoreKey()
+        public string GetStoreKey()
         {
             if (string.IsNullOrEmpty(storeKey))
             {

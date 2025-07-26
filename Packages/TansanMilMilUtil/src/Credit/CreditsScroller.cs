@@ -11,6 +11,7 @@ namespace TansanMilMil.Util
         [SerializeField] private TextMeshProUGUI creditsText;
         public float scrollSpeed = 100f;
         private bool startScrolling = false;
+        private ICreditProviderRegistry creditProviderRegistry => CreditProviderRegistry.GetInstance();
 
         private void Start()
         {
@@ -57,12 +58,12 @@ namespace TansanMilMil.Util
         /// </summary>
         private List<Credit> GetCredits()
         {
-            if (!CreditProviderRegistry.GetInstance().IsProviderRegistered())
+            if (!creditProviderRegistry.IsProviderRegistered())
             {
                 throw new System.Exception("CreditProvider is not registered. Please register a provider before using CreditsScroller.");
             }
 
-            ICreditProvider provider = CreditProviderRegistry.GetInstance().GetProvider();
+            ICreditProvider provider = creditProviderRegistry.GetProvider();
             return provider?.GetCredits();
         }
 

@@ -17,10 +17,11 @@ namespace TansanMilMil.Util
         private const float MaxVolume = 0;
         private const float MinVolume = -40;
         private const float AudioMixerMinVolume = -80;
+        private IPlayerConfigManager playerConfigManager => PlayerConfigManager.GetInstance();
 
         private void Start()
         {
-            SetMixerVolume(PlayerConfigManager.GetInstance().GetConfig().soundVolume);
+            SetMixerVolume(playerConfigManager.GetConfig().soundVolume);
         }
 
         public void Stop()

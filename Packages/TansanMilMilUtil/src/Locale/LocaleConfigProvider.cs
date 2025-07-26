@@ -4,16 +4,18 @@ namespace TansanMilMil.Util
 {
     internal class LocaleConfigProvider : ILocaleConfigProvider
     {
+        private IPlayerConfigManager playerConfigManager => PlayerConfigManager.GetInstance();
+
         public string GetStoredCultureInfoName()
         {
-            return PlayerConfigManager.GetInstance().GetConfig().cultureInfoName;
+            return playerConfigManager.GetConfig().cultureInfoName;
         }
 
         public void SetCultureInfoName(string cultureInfoName)
         {
-            PlayerConfig config = PlayerConfigManager.GetInstance().GetConfig();
+            PlayerConfig config = playerConfigManager.GetConfig();
             config.cultureInfoName = cultureInfoName;
-            PlayerConfigManager.GetInstance().SetConfig(config);
+            playerConfigManager.SetConfig(config);
         }
     }
 }

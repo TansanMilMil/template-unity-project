@@ -9,6 +9,7 @@ namespace TansanMilMil.Util
         private bool toggle = false;
         [SerializeField]
         private KeyCode triggerKey = KeyCode.F2;
+        private ITimeScaleManager timeScaleManager => TimeScaleManager.GetInstance();
 
         void Update()
         {
@@ -23,7 +24,7 @@ namespace TansanMilMil.Util
                 {
                     timeScale = 1.0f;
                 }
-                TimeScaleManager.SetTimeScale(timeScale);
+                timeScaleManager.SetTimeScale(timeScale);
             }
         }
     }

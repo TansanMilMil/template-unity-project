@@ -6,10 +6,11 @@ namespace TansanMilMil.Util
     {
         private PlatformScreenResolutionConfig resolutionConfig;
         private static bool SetCompleted = false;
+        private IScreenResolutionManager screenResolutionManager => ScreenResolutionManager.GetInstance();
 
         void Start()
         {
-            resolutionConfig = ScreenResolutionManager.GetConfig();
+            resolutionConfig = screenResolutionManager.GetConfig();
 
             SetResolution();
         }
@@ -19,8 +20,8 @@ namespace TansanMilMil.Util
             if (SetCompleted)
                 return;
 
-            ScreenResolutionManager.Initialize(resolutionConfig);
-            ScreenResolutionManager.ApplyResolutionForCurrentPlatform();
+            screenResolutionManager.Initialize(resolutionConfig);
+            screenResolutionManager.ApplyResolutionForCurrentPlatform();
 
             SetCompleted = true;
         }

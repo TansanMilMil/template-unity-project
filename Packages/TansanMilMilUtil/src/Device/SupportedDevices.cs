@@ -3,8 +3,9 @@ using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    public class SupportedDevices : Singleton<SupportedDevices>
+    public class SupportedDevices : Singleton<SupportedDevices>, ISupportedDevices
     {
+        private ISupportedDevicesProviderRegistry supportedDevicesProviderRegistry => SupportedDevicesProviderRegistry.GetInstance();
         /// <summary>
         /// サポートデバイス情報を取得
         /// プロバイダーが登録されていればそれを使用し、なければデフォルトを使用
@@ -34,12 +35,12 @@ namespace TansanMilMil.Util
         /// <returns>サポートデバイスプロバイダー</returns>
         private ISupportedDevicesProvider GetProvider()
         {
-            if (!SupportedDevicesProviderRegistry.GetInstance().IsProviderRegistered())
+            if (!supportedDevicesProviderRegistry.IsProviderRegistered())
             {
                 throw new System.InvalidOperationException("No supported devices provider is registered. Please register a provider before calling this method.");
             }
 
-            ISupportedDevicesProvider provider = SupportedDevicesProviderRegistry.GetInstance().GetProvider();
+            ISupportedDevicesProvider provider = supportedDevicesProviderRegistry.GetProvider();
             return provider;
         }
     }

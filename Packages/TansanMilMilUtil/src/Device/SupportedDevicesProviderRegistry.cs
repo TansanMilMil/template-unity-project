@@ -3,7 +3,7 @@ namespace TansanMilMil.Util
     /// <summary>
     /// サポートデバイスプロバイダーを管理するレジストリ
     /// </summary>
-    public class SupportedDevicesProviderRegistry : Singleton<SupportedDevicesProviderRegistry>
+    public class SupportedDevicesProviderRegistry : Singleton<SupportedDevicesProviderRegistry>, ISupportedDevicesProviderRegistry
     {
         private ISupportedDevicesProvider _provider;
 

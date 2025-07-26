@@ -1,15 +1,15 @@
 namespace TansanMilMil.Util
 {
-    public static class AssetsTypeSettingRegistry
+    public class AssetsTypeSettingRegistry : Singleton<AssetsTypeSettingRegistry>, IAssetsTypeSettingRegistry
     {
-        private static IAssetsTypeSetting setting;
+        private IAssetsTypeSetting setting;
 
-        public static void Register(IAssetsTypeSetting setting)
+        public void Register(IAssetsTypeSetting setting)
         {
-            AssetsTypeSettingRegistry.setting = setting;
+            this.setting = setting;
         }
 
-        public static IAssetsTypeSetting GetAssetsTypeSetting()
+        public IAssetsTypeSetting GetAssetsTypeSetting()
         {
             if (setting == null)
             {

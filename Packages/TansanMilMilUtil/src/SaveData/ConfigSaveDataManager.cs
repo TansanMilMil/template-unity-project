@@ -16,11 +16,13 @@ namespace TansanMilMil.Util
         public bool LoadedInit => loadedInit;
         private IKVStore store;
         private string storeKey;
+        private IPlayerConfigManager playerConfigManager => PlayerConfigManager.GetInstance();
+        private IConfigSaveDataStoreRegistry configSaveDataStoreRegistry => ConfigSaveDataStoreRegistry.GetInstance();
 
         protected override void OnSingletonStart()
         {
-            store = ConfigSaveDataStoreRegistry.GetConfigSaveDataStore();
-            storeKey = ConfigSaveDataStoreRegistry.GetStoreKey();
+            store = configSaveDataStoreRegistry.GetConfigSaveDataStore();
+            storeKey = configSaveDataStoreRegistry.GetStoreKey();
 
             LoadAsInit();
         }
@@ -30,7 +32,7 @@ namespace TansanMilMil.Util
             Debug.Log("ConfigSaveDataManager: now saving...");
 
             ConfigSaveData model = new ConfigSaveDataBuilder()
-                .playerConfig(PlayerConfigManager.GetInstance().GetConfig())
+                .playerConfig(playerConfigManager.GetConfig())
                 .Build();
             string json = JsonUtility.ToJson(model);
             store.Upsert(storeKey, json);
@@ -77,7 +79,7 @@ namespace TansanMilMil.Util
                 return;
             }
 
-            PlayerConfigManager.GetInstance().SetConfig(saveData.playerConfig);
+            playerConfigManager.SetConfig(saveData.playerConfig);
         }
     }
 }

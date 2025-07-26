@@ -3,7 +3,7 @@ using System.IO;
 
 namespace TansanMilMil.Util
 {
-    public class BgmFactory : Singleton<BgmFactory>
+    public class BgmFactory : Singleton<BgmFactory>, IBgmFactory
     {
         /// <summary>各BGMのループ範囲を定義する</summary>
         private readonly List<Bgm> musics = new List<Bgm>()

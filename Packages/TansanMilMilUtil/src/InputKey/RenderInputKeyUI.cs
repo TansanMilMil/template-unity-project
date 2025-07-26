@@ -20,12 +20,14 @@ namespace TansanMilMil.Util
         /// 基本的にゲーム中ずっとUIのSpriteは必要になるはずなので SpriteKeeper.ReleaseAllAssets() はしてない。メモリの問題が出てきたら要検討。
         /// </summary>
         private static AssetsKeeper<Sprite> SpriteKeeper;
+        private IInputKeys inputKeys => InputKeys.GetInstance();
+        private IAssetsTypeSettingRegistry assetsTypeSettingRegistry => AssetsTypeSettingRegistry.GetInstance();
 
         private void Start()
         {
             RenderKeyNameAndSpriteAsync(this.GetCancellationTokenOnDestroy()).Forget();
 
-            SpriteKeeper = new AssetsKeeperFactory(AssetsTypeSettingRegistry.GetAssetsTypeSetting()).Create<Sprite>();
+            SpriteKeeper = new AssetsKeeperFactory(assetsTypeSettingRegistry.GetAssetsTypeSetting()).Create<Sprite>();
         }
 
         private async UniTask RenderKeyNameAndSpriteAsync(CancellationToken cToken = default)
@@ -60,7 +62,7 @@ namespace TansanMilMil.Util
 
             if (inputKeyImage != null)
             {
-                string spritePath = InputKeys.GetInstance().GetSingleKeySpritePathForUI(inputKeyType, bindConditions);
+                string spritePath = inputKeys.GetSingleKeySpritePathForUI(inputKeyType, bindConditions);
                 if (spritePath != null)
                 {
                     inputKeyImage.enabled = false;
@@ -79,7 +81,7 @@ namespace TansanMilMil.Util
         {
             if (inputKeyText != null)
             {
-                inputKeyText.text = InputKeys.GetInstance().GetSingleKeyNameForUI(inputKeyType, bindConditions);
+                inputKeyText.text = inputKeys.GetSingleKeyNameForUI(inputKeyType, bindConditions);
                 return true;
             }
             return false;

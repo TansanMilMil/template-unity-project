@@ -7,7 +7,7 @@ using UnityEngine;
 namespace TansanMilMil.Util
 {
     [DefaultExecutionOrder(-10)]
-    public class LocaleManager : SingletonMonoBehaviour<LocaleManager>
+    public class LocaleManager : SingletonMonoBehaviour<LocaleManager>, ILocaleManager
     {
         private ILocaleService localeService;
         private bool isInitialized = false;

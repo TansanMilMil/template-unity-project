@@ -15,6 +15,8 @@ namespace TansanMilMil.Util
     [DefaultExecutionOrder(-10)]
     public class GameLocaleInitializer : SingletonMonoBehaviour<GameLocaleInitializer>
     {
+        private IPlayerConfigManager playerConfigManager => PlayerConfigManager.GetInstance();
+        private ILocaleManager localeManager => LocaleManager.GetInstance();
         private void Awake()
         {
             InitGameLocaleAsync(this.GetCancellationTokenOnDestroy()).Forget();
@@ -27,8 +29,8 @@ namespace TansanMilMil.Util
             await WaitDependenciesInitAsync(cToken);
 
             cToken.ThrowIfCancellationRequested();
-            string localeInConfig = PlayerConfigManager.GetInstance().GetConfig().cultureInfoName;
-            LocaleManager.GetInstance().SetLocale(localeInConfig);
+            string localeInConfig = playerConfigManager.GetConfig().cultureInfoName;
+            localeManager.SetLocale(localeInConfig);
 
             gameObject.SetActive(false);
         }
@@ -40,7 +42,7 @@ namespace TansanMilMil.Util
             Debug.Log("Waiting for LocaleManager and ConfigSaveDataManager initialization...");
             await UniTask.WaitUntil(() =>
                 LocalizationSettings.InitializationOperation.IsDone &&
-                LocaleManager.GetInstance().IsInitialized, cancellationToken: cToken);
+                localeManager.IsInitialized, cancellationToken: cToken);
 
             cToken.ThrowIfCancellationRequested();
             Debug.Log("Waiting for ConfigSaveDataManager to load initial data...");

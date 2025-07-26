@@ -2,18 +2,18 @@ using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    public static class FrameRateManager
+    public class FrameRateManager : Singleton<FrameRateManager>, IFrameRateManager
     {
-        private static PlatformFrameRateConfig config;
-        private static bool isInitialized = false;
+        private PlatformFrameRateConfig config;
+        private bool isInitialized = false;
 
-        public static void Initialize(PlatformFrameRateConfig frameRateConfig)
+        public void Initialize(PlatformFrameRateConfig frameRateConfig)
         {
             config = frameRateConfig;
             isInitialized = true;
         }
 
-        public static void ApplyFrameRateForCurrentPlatform()
+        public void ApplyFrameRateForCurrentPlatform()
         {
             if (!isInitialized)
             {
@@ -24,7 +24,7 @@ namespace TansanMilMil.Util
             ApplyFrameRateForPlatform(currentPlatform);
         }
 
-        private static void ApplyFrameRateForPlatform(RuntimePlatform platform)
+        private void ApplyFrameRateForPlatform(RuntimePlatform platform)
         {
             if (!isInitialized)
             {

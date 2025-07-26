@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    public class InputKeys : Singleton<InputKeys>
+    public class InputKeys : Singleton<InputKeys>, IInputKeys
     {
         private readonly InputKeyBinds inputKeyBinds = new InputKeyBinds();
 

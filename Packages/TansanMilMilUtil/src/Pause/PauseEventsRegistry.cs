@@ -2,11 +2,11 @@ using System.Collections.Generic;
 
 namespace TansanMilMil.Util
 {
-    public static class PauseEventsRegistry
+    public class PauseEventsRegistry : Singleton<PauseEventsRegistry>, IPauseEventsRegistry
     {
-        private static readonly List<IPauseEvents> pauseEvents = new List<IPauseEvents>();
+        private readonly List<IPauseEvents> pauseEvents = new List<IPauseEvents>();
 
-        public static void Register(IPauseEvents pauseEvent)
+        public void Register(IPauseEvents pauseEvent)
         {
             if (!pauseEvents.Contains(pauseEvent))
             {
@@ -14,7 +14,7 @@ namespace TansanMilMil.Util
             }
         }
 
-        public static void FireOnPauseEvents()
+        public void FireOnPauseEvents()
         {
             if (pauseEvents.Count == 0)
             {
@@ -27,7 +27,7 @@ namespace TansanMilMil.Util
             }
         }
 
-        public static void FireOnResumeEvents()
+        public void FireOnResumeEvents()
         {
             if (pauseEvents.Count == 0)
             {

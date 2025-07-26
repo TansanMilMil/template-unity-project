@@ -9,6 +9,9 @@ namespace TansanMilMil.Util
         private bool toggle = false;
         [SerializeField]
         private KeyCode triggerKey = KeyCode.F2;
+        [SerializeField]
+        private float speedUpFactor = 3.0f;
+        private const float DefaultSpeed = 1;
         private ITimeScaleManager timeScaleManager => TimeScaleManager.GetInstance();
 
         void Update()
@@ -18,13 +21,14 @@ namespace TansanMilMil.Util
                 toggle = !toggle;
                 if (toggle)
                 {
-                    timeScale = 3.0f;
+                    timeScale = speedUpFactor;
                 }
                 else
                 {
-                    timeScale = 1.0f;
+                    timeScale = DefaultSpeed;
                 }
                 timeScaleManager.SetTimeScale(timeScale);
+                Debug.Log($"DebugSpeedUp: Time scale set to {timeScale}.");
             }
         }
     }

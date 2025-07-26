@@ -1,18 +1,18 @@
 {
-  "name": "com.tansanmilmil.tansanmilmilutil",
-  "version": "1.0.0",
-  "displayName": "TansanMilMilUtil",
-  "description": "A utility library created by TansanMilMil.",
-  "unity": "2020.3",
-  "author": {
-    "name": "TansanMilMil",
-    "email": "tmdev2929@gmail.com",
-    "url": "https://x.com/heberekeT"
-  },
-  "keywords": [
-    "library",
-    "example"
-  ],
-  "hideInEditor": true,
-  "license": "MIT"
+    "name": "com.tansanmilmil.tansanmilmilutil",
+    "version": "1.1.0",
+    "displayName": "TansanMilMilUtil",
+    "description": "A utility library created by TansanMilMil.",
+    "unity": "2020.3",
+    "author": {
+        "name": "TansanMilMil",
+        "email": "tmdev2929@gmail.com",
+        "url": "https://x.com/heberekeT"
+    },
+    "keywords": [
+        "library",
+        "example"
+    ],
+    "hideInEditor": true,
+    "license": "MIT"
 }

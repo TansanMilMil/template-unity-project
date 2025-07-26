@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace TansanMilMil.Util
 {
     public class SkipEventKeyResistory : Singleton<SkipEventKeyResistory>, ISkipEventKeyResistory
@@ -11,6 +13,12 @@ namespace TansanMilMil.Util
 
         public ISkipEventKey GetSkipEventKey()
         {
+            if (skipEventKey == null)
+            {
+                Debug.LogError("SkipEventKey is not initialized. Please call Initialize() before using GetSkipEventKey().");
+                return null;
+            }
+
             return skipEventKey;
         }
     }

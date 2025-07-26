@@ -5,24 +5,32 @@ namespace TansanMilMil.Util
     public class PostProcessingKiller : MonoBehaviour
     {
         [SerializeField] private GameObject globalVolume;
+        private static bool KillCompleted = false;
+        private IPlatformPostProcessingConfig postProcessingConfig => PlatformPostProcessingConfig.GetInstance();
 
         void Start()
         {
             Kill();
+            Destroy(this);
         }
 
         private void Kill()
         {
-            switch (UnityEngine.Device.Application.platform)
+            if (KillCompleted)
+                return;
+
+            if (postProcessingConfig != null && globalVolume != null)
             {
-                // PostProcessingを無効化して処理を軽くする
-                case RuntimePlatform.Android:
+                RuntimePlatform currentPlatform = UnityEngine.Device.Application.platform;
+
+                if (postProcessingConfig.ShouldDisablePostProcessingForPlatform(currentPlatform))
+                {
                     globalVolume.SetActive(false);
-                    Debug.Log("PostProcessingKiller: PostProcessing has been killed.");
-                    break;
-                default:
-                    break;
+                    Debug.Log($"PostProcessingKiller: PostProcessing has been killed for platform {currentPlatform}.");
+                }
             }
+
+            KillCompleted = true;
         }
     }
 }

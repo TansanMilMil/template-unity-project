@@ -1,9 +1,9 @@
 namespace TansanMilMil.Util
 {
-    public interface IConfigSaveDataStoreRegistry
+    public interface IConfigSaveDataStoreRegistry<Tkey, TValue>
     {
-        void Initialize(IKVStore store, string key);
-        IKVStore GetConfigSaveDataStore();
-        string GetStoreKey();
+        void Initialize(IStore<Tkey, TValue> store, Tkey key);
+        IStore<Tkey, TValue> GetConfigSaveDataStore();
+        Tkey GetStoreKey();
     }
 }

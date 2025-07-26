@@ -5,8 +5,15 @@ using UnityEngine;
 
 namespace TansanMilMil.Util
 {
+    /// <summary>
+    /// ジェネリック型のコンポーネントはインスペクタにアタッチできないため、ジェネリック未使用のclassを別途作成してアタッチできるようにしている
+    /// </summary>
     [DefaultExecutionOrder(-10)]
-    public class ConfigSaveDataManager : SingletonMonoBehaviour<ConfigSaveDataManager>, IConfigSaveDataManager
+    public class ConfigSaveDataManager : ConfigSaveDataManager<object, object>
+    {
+    }
+
+    public class ConfigSaveDataManager<StoreKey, StoreValue> : SingletonMonoBehaviour<ConfigSaveDataManager<StoreKey, StoreValue>>, IConfigSaveDataManager<StoreKey, StoreValue>
     {
         private Subject<bool> _loadCompleted = new Subject<bool>();
         private Subject<bool> _saveCompleted = new Subject<bool>();
@@ -14,10 +21,11 @@ namespace TansanMilMil.Util
         public Observable<bool> SaveCompleted => _saveCompleted;
         private bool loadedInit = false;
         public bool LoadedInit => loadedInit;
-        private IKVStore store;
-        private string storeKey;
+        private IStore<StoreKey, StoreValue> store;
+        private IStoreValueConverter<StoreValue> storeValueConverter => KVStoreValueConverter<StoreValue>.GetInstance();
+        private StoreKey storeKey;
         private IPlayerConfigManager playerConfigManager => PlayerConfigManager.GetInstance();
-        private IConfigSaveDataStoreRegistry configSaveDataStoreRegistry => ConfigSaveDataStoreRegistry.GetInstance();
+        private IConfigSaveDataStoreRegistry<StoreKey, StoreValue> configSaveDataStoreRegistry => ConfigSaveDataStoreRegistry<StoreKey, StoreValue>.GetInstance();
 
         protected override void OnSingletonStart()
         {
@@ -35,7 +43,11 @@ namespace TansanMilMil.Util
                 .playerConfig(playerConfigManager.GetConfig())
                 .Build();
             string json = JsonUtility.ToJson(model);
-            store.Upsert(storeKey, json);
+
+            store.CreateStoreConnection();
+            store.Upsert(storeKey, storeValueConverter.Convert(json));
+            store.Commit();
+            store.CloseStoreConnection();
             Debug.Log("ConfigSaveDataManager: save completed!");
 
             AfterSave();
@@ -48,7 +60,12 @@ namespace TansanMilMil.Util
 
         protected void Load()
         {
-            string json = store.Select(storeKey);
+            store.CreateStoreConnection();
+            StoreValue value = store.Select(storeKey);
+            store.Commit();
+            store.CloseStoreConnection();
+
+            string json = storeValueConverter.Convert(value);
             ConfigSaveData saveData = JsonUtility.FromJson<ConfigSaveData>(json);
             SetStaticParams(saveData);
             loadedInit = true;

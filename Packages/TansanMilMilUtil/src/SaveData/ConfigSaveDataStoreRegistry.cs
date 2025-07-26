@@ -1,17 +1,19 @@
+using System.Collections.Generic;
+
 namespace TansanMilMil.Util
 {
-    public class ConfigSaveDataStoreRegistry : Singleton<ConfigSaveDataStoreRegistry>, IConfigSaveDataStoreRegistry
+    public class ConfigSaveDataStoreRegistry<Tkey, TValue> : Singleton<ConfigSaveDataStoreRegistry<Tkey, TValue>>, IConfigSaveDataStoreRegistry<Tkey, TValue>
     {
-        private IKVStore configSaveDataStore;
-        private string storeKey;
+        private IStore<Tkey, TValue> configSaveDataStore;
+        private Tkey storeKey;
 
-        public void Initialize(IKVStore store, string key)
+        public void Initialize(IStore<Tkey, TValue> store, Tkey key)
         {
             configSaveDataStore = store;
             storeKey = key;
         }
 
-        public IKVStore GetConfigSaveDataStore()
+        public IStore<Tkey, TValue> GetConfigSaveDataStore()
         {
             if (configSaveDataStore == null)
             {
@@ -20,9 +22,9 @@ namespace TansanMilMil.Util
             return configSaveDataStore;
         }
 
-        public string GetStoreKey()
+        public Tkey GetStoreKey()
         {
-            if (string.IsNullOrEmpty(storeKey))
+            if (EqualityComparer<Tkey>.Default.Equals(storeKey))
             {
                 throw new System.InvalidOperationException("Store key is not set. Call Initialize() first.");
             }

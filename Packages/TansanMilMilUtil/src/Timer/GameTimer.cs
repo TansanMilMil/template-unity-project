@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    public class GameTimer : MonoBehaviour
+    public class GameTimer : MonoBehaviour, IGameTimer
     {
         private float initRemainSec = 0;
         private float remainSec = 0;

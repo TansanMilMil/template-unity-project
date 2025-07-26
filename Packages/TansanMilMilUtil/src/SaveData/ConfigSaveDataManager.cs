@@ -6,7 +6,7 @@ using UnityEngine;
 namespace TansanMilMil.Util
 {
     [DefaultExecutionOrder(-10)]
-    public class ConfigSaveDataManager : SingletonMonoBehaviour<ConfigSaveDataManager>
+    public class ConfigSaveDataManager : SingletonMonoBehaviour<ConfigSaveDataManager>, IConfigSaveDataManager
     {
         private Subject<bool> _loadCompleted = new Subject<bool>();
         private Subject<bool> _saveCompleted = new Subject<bool>();

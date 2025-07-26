@@ -17,8 +17,8 @@ namespace TansanMilMil.Util
         /// <summary>
         /// Key: TagName, Value: GameObject
         /// </summary>
-        private List<GameObjectCache> objectCaches = new List<GameObjectCache>();
-        private List<ComponentCache> componentCaches = new List<ComponentCache>();
+        private List<IGameObjectCache> objectCaches = new List<IGameObjectCache>();
+        private List<IComponentCache> componentCaches = new List<IComponentCache>();
         private readonly GameObjectHolderVacuumer vacuumer = new GameObjectHolderVacuumer();
 
         private void Update()
@@ -37,7 +37,7 @@ namespace TansanMilMil.Util
         {
             VacuumCaches();
 
-            List<GameObjectCache> caches = objectCaches.FindAll(x => x.tag == tag);
+            List<IGameObjectCache> caches = objectCaches.FindAll(x => x.tag == tag);
             if (caches.Count >= 2)
             {
                 Debug.LogWarning("There are multiple objects with the same tag.");
@@ -73,7 +73,7 @@ namespace TansanMilMil.Util
         {
             VacuumCaches();
 
-            List<ComponentCache> caches = componentCaches.FindAll(x => x.tag == tag && x.component is T);
+            List<IComponentCache> caches = componentCaches.FindAll(x => x.tag == tag && x.component is T);
             if (caches.Count >= 2)
             {
                 Debug.LogWarning("There are multiple components with the same tag.");
@@ -135,7 +135,7 @@ namespace TansanMilMil.Util
                 return default;
             }
 
-            List<ComponentCache> caches = componentCaches.FindAll(x => x.gameObjectInstanceID == obj.GetInstanceID() && x.component is T);
+            List<IComponentCache> caches = componentCaches.FindAll(x => x.gameObjectInstanceID == obj.GetInstanceID() && x.component is T);
             if (caches.Count >= 2)
             {
                 throw new Exception("There are multiple components with the same component.");

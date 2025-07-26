@@ -17,7 +17,7 @@ namespace TansanMilMil.Util
     /// </summary>
     [RequireComponent(typeof(AudioSource))]
     [DefaultExecutionOrder(-20)]
-    public class BgmManager : SingletonMonoBehaviour<BgmManager>, IIgnoreVacuumComponent
+    public class BgmManager : SingletonMonoBehaviour<BgmManager>, IIgnoreVacuumComponent, IBgmManager
     {
         [SerializeField] private AudioMixer bgmAudioMixer;
         public AudioSource audioSource;

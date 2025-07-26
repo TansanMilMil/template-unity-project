@@ -1,6 +1,6 @@
 namespace TansanMilMil.Util
 {
-    public class AssetsKeeperFactory
+    public class AssetsKeeperFactory : IAssetsKeeperFactory
     {
         private AssetsType assetsType;
 

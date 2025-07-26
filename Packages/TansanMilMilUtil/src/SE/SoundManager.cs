@@ -8,7 +8,7 @@ namespace TansanMilMil.Util
 {
     [RequireComponent(typeof(AudioSource))]
     [DefaultExecutionOrder(-10)]
-    public class SoundManager : MonoBehaviour, IIgnoreVacuumComponent
+    public class SoundManager : MonoBehaviour, IIgnoreVacuumComponent, ISoundManager
     {
         [SerializeField]
         private AudioMixer soundAudioMixer;

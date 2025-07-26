@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    public class MessageManager : MonoBehaviour
+    public class MessageManager : MonoBehaviour, IMessageManager
     {
         [SerializeField]
         private GameObject messageFramePrefab;

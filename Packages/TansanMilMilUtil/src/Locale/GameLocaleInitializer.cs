@@ -17,6 +17,8 @@ namespace TansanMilMil.Util
     {
         private IPlayerConfigManager playerConfigManager => PlayerConfigManager.GetInstance();
         private ILocaleManager localeManager => LocaleManager.GetInstance();
+        private IConfigSaveDataManager configSaveDataManager => ConfigSaveDataManager.GetInstance();
+
         private void Awake()
         {
             InitGameLocaleAsync(this.GetCancellationTokenOnDestroy()).Forget();
@@ -46,7 +48,7 @@ namespace TansanMilMil.Util
 
             cToken.ThrowIfCancellationRequested();
             Debug.Log("Waiting for ConfigSaveDataManager to load initial data...");
-            await UniTask.WaitUntil(() => ConfigSaveDataManager.GetInstance().LoadedInit, cancellationToken: cToken);
+            await UniTask.WaitUntil(() => configSaveDataManager.LoadedInit, cancellationToken: cToken);
         }
     }
 }

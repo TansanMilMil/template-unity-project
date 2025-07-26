@@ -18,10 +18,10 @@ namespace TansanMilMil.Util
         /// キャッシュ量が閾値を超えた場合、古いキャッシュ順に削除する
         /// メモリリークを防ぐために使ってね
         /// </summary>
-        public List<GameObjectCache> VacuumObjectCaches(IList<GameObjectCache> objectCaches)
+        public List<IGameObjectCache> VacuumObjectCaches(IList<IGameObjectCache> objectCaches)
         {
             // Vacuum対象だけをListに抽出
-            List<GameObjectCache> vacuumObjectCaches = objectCaches.Where(x => x.vacuumable).ToList();
+            List<IGameObjectCache> vacuumObjectCaches = objectCaches.Where(x => x.vacuumable).ToList();
 
             // キャッシュ量が増えすぎたら、古いものからフラグ(reserveVacuum)をtrueにして削除する
             if (vacuumObjectCaches.Count > MaxObjectCacheCount)
@@ -38,17 +38,17 @@ namespace TansanMilMil.Util
 
             WarnTooManyVacuumCount();
 
-            return objectCaches as List<GameObjectCache> ?? objectCaches.ToList();
+            return objectCaches as List<IGameObjectCache> ?? objectCaches.ToList();
         }
 
         /// <summary>
         /// キャッシュ量が閾値を超えた場合、古いキャッシュ順に削除する
         /// メモリリークを防ぐために使ってね
         /// </summary>
-        public List<ComponentCache> VacuumComponentCaches(IList<ComponentCache> componentCaches)
+        public List<IComponentCache> VacuumComponentCaches(IList<IComponentCache> componentCaches)
         {
             // Vacuum対象だけをListに抽出
-            List<ComponentCache> vacuumComponentCaches = componentCaches.Where(x => x.vacuumable).ToList();
+            List<IComponentCache> vacuumComponentCaches = componentCaches.Where(x => x.vacuumable).ToList();
 
             // キャッシュ量が増えすぎたら、古いものからフラグ(reserveVacuum)をtrueにして削除する
             if (vacuumComponentCaches.Count > MaxComponentCacheCount)
@@ -65,7 +65,7 @@ namespace TansanMilMil.Util
 
             WarnTooManyVacuumCount();
 
-            return componentCaches as List<ComponentCache> ?? componentCaches.ToList();
+            return componentCaches as List<IComponentCache> ?? componentCaches.ToList();
         }
 
         public bool IsVacuumable<T>(T component)

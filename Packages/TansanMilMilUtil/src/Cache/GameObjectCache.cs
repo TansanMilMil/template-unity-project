@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    public class GameObjectCache
+    public class GameObjectCache : IGameObjectCache
     {
         public string tag { get; private set; }
         public GameObject gameObject { get; private set; }

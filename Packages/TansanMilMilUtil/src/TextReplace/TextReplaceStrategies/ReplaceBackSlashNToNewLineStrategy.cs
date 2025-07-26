@@ -2,7 +2,7 @@ using System;
 
 namespace TansanMilMil.Util
 {
-    internal class ReplaceBackSlashNToNewLineStrategy : TextReplaceStrategy
+    public class ReplaceBackSlashNToNewLineStrategy : TextReplaceStrategy
     {
         public override string Replace(string text)
         {

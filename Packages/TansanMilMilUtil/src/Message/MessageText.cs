@@ -9,18 +9,10 @@ namespace TansanMilMil.Util
         public string text { get; set; } = "";
         public string talkerName { get; set; } = "";
         public IList<string> choices { get; set; } = new List<string>();
-        /// <summary>
-        /// textの置き換えロジックを実装したコンポーネントのリスト
-        /// </summary>
-        private readonly IReadOnlyCollection<TextReplaceStrategy> DefaultReplaceStrategies = new ReadOnlyCollection<TextReplaceStrategy>(
-            new List<TextReplaceStrategy>()
-            {
-                new ReplaceBackSlashNToNewLineStrategy()
-            });
 
         public MessageText(string text, string talkerName = null, IList<string> choices = null)
         {
-            IEnumerable<TextReplaceStrategy> strategies = DefaultReplaceStrategies.ToList();
+            IEnumerable<TextReplaceStrategy> strategies = DefaultTextReplaceStrategy.GetInstance().GetDefaultStrategies();
 
             if (choices != null)
             {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -22,7 +23,9 @@ namespace TansanMilMil.Util
         {
             ILocaleConfigProvider configProvider = new LocaleConfigProvider();
             ILocaleRegistry localeRegistry = new LocaleRegistry();
-            localeService = new LocaleService(configProvider, localeRegistry);
+            IEnumerable<TextReplaceStrategy> textReplaceStrategies = DefaultTextReplaceStrategy.GetInstance().GetDefaultStrategies();
+
+            localeService = new LocaleService(configProvider, localeRegistry, textReplaceStrategies);
         }
 
         private async UniTask InitializeAsync(CancellationToken cToken = default)

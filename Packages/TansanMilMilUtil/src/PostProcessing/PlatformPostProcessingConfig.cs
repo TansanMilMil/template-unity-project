@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace TansanMilMil.Util
 {
+    [RequireInitializeSingleton]
     public class PlatformPostProcessingConfig : Singleton<PlatformPostProcessingConfig>, IPlatformPostProcessingConfig
     {
         private List<PlatformPostProcessingItem> platformPostProcessingSettings = new List<PlatformPostProcessingItem>();
@@ -17,7 +18,8 @@ namespace TansanMilMil.Util
         {
             if (platformPostProcessingSettings == null)
             {
-                throw new InvalidOperationException("PlatformPostProcessingConfig is not initialized. Please call Initialize() before using this method.");
+                Debug.LogError("PlatformPostProcessingConfig is not initialized. Please call Initialize() before using this method.");
+                return false;
             }
 
             var item = platformPostProcessingSettings.Find(x => x.platform == platform);
@@ -28,7 +30,8 @@ namespace TansanMilMil.Util
         {
             if (platformPostProcessingSettings == null)
             {
-                throw new InvalidOperationException("PlatformPostProcessingConfig is not initialized. Please call Initialize() before using this method.");
+                Debug.LogError("PlatformPostProcessingConfig is not initialized. Please call Initialize() before using this method.");
+                return false;
             }
 
             return platformPostProcessingSettings.Exists(x => x.platform == platform);

@@ -2,7 +2,7 @@ namespace TansanMilMil.Util
 {
     public interface ISupportedDevicesProviderRegistry
     {
-        void RegisterProvider(ISupportedDevicesProvider provider);
+        void Initialize(ISupportedDevicesProvider provider);
         ISupportedDevicesProvider GetProvider();
         bool IsProviderRegistered();
     }

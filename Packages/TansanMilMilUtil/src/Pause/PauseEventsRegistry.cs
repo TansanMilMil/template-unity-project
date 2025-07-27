@@ -1,12 +1,14 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace TansanMilMil.Util
 {
+    [RequireInitializeSingleton]
     public class PauseEventsRegistry : Singleton<PauseEventsRegistry>, IPauseEventsRegistry
     {
         private readonly List<IPauseEvents> pauseEvents = new List<IPauseEvents>();
 
-        public void Register(IPauseEvents pauseEvent)
+        public void Initialize(IPauseEvents pauseEvent)
         {
             if (!pauseEvents.Contains(pauseEvent))
             {
@@ -18,7 +20,8 @@ namespace TansanMilMil.Util
         {
             if (pauseEvents.Count == 0)
             {
-                throw new System.InvalidOperationException("No pause events registered.");
+                Debug.LogError("No pause events registered. Please call Initialize() before using FireOnPauseEvents().");
+                return;
             }
 
             foreach (var pauseEvent in pauseEvents)
@@ -31,7 +34,8 @@ namespace TansanMilMil.Util
         {
             if (pauseEvents.Count == 0)
             {
-                throw new System.InvalidOperationException("No resume events registered.");
+                Debug.LogError("No resume events registered. Please call Initialize() before using FireOnResumeEvents().");
+                return;
             }
 
             foreach (var pauseEvent in pauseEvents)

@@ -1,10 +1,13 @@
+using UnityEngine;
+
 namespace TansanMilMil.Util
 {
+    [RequireInitializeSingleton]
     public class AssetsTypeSettingRegistry : Singleton<AssetsTypeSettingRegistry>, IAssetsTypeSettingRegistry
     {
         private IAssetsTypeSetting setting;
 
-        public void Register(IAssetsTypeSetting setting)
+        public void Initialize(IAssetsTypeSetting setting)
         {
             this.setting = setting;
         }
@@ -13,7 +16,8 @@ namespace TansanMilMil.Util
         {
             if (setting == null)
             {
-                throw new System.InvalidOperationException("AssetsTypeSetting has not been registered. Please call Register() first.");
+                Debug.LogError("AssetsTypeSetting has not been registered. Please call Initialize() before using GetAssetsTypeSetting().");
+                return null;
             }
 
             return setting;

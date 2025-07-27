@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace TansanMilMil.Util
 {
+    [RequireInitializeSingleton]
     public class SkipEventKeyResistory : Singleton<SkipEventKeyResistory>, ISkipEventKeyResistory
     {
         private ISkipEventKey skipEventKey;

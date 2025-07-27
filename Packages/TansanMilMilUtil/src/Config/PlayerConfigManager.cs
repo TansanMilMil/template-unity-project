@@ -4,12 +4,11 @@ namespace TansanMilMil.Util
 {
     public class PlayerConfigManager : Singleton<PlayerConfigManager>, IPlayerConfigManager
     {
-        private PlayerConfig config = new();
-        public bool LoadedInit { get; private set; } = false;
+        private PlayerConfig config;
 
         public PlayerConfig GetConfig()
         {
-            if (!LoadedInit)
+            if (config == null)
             {
                 throw new System.InvalidOperationException("Config not loaded yet. Call SetConfig() first.");
             }
@@ -20,7 +19,6 @@ namespace TansanMilMil.Util
         public void SetConfig(PlayerConfig config)
         {
             this.config = config;
-            LoadedInit = true;
         }
     }
 }

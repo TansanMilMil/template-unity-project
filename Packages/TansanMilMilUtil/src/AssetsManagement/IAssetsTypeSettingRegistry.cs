@@ -2,7 +2,7 @@ namespace TansanMilMil.Util
 {
     public interface IAssetsTypeSettingRegistry
     {
-        void Register(IAssetsTypeSetting setting);
+        void Initialize(IAssetsTypeSetting setting);
         IAssetsTypeSetting GetAssetsTypeSetting();
     }
 }

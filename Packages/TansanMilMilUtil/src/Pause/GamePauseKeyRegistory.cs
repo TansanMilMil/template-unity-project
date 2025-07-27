@@ -1,5 +1,8 @@
+using UnityEngine;
+
 namespace TansanMilMil.Util
 {
+    [RequireInitializeSingleton]
     public class GamePauseKeyRegistory : Singleton<GamePauseKeyRegistory>, IGamePauseKeyRegistory
     {
         private IGamePauseKey gamePauseKey;
@@ -13,7 +16,8 @@ namespace TansanMilMil.Util
         {
             if (gamePauseKey == null)
             {
-                throw new System.InvalidOperationException("GamePauseKeyRegistory is not initialized. Call Initialize() before using GetGamePauseKey().");
+                Debug.LogError("GamePauseKeyRegistory is not initialized. Please call Initialize() before using GetGamePauseKey().");
+                return null;
             }
 
             return gamePauseKey;

@@ -1,8 +1,11 @@
+using UnityEngine;
+
 namespace TansanMilMil.Util
 {
     /// <summary>
     /// サポートデバイスプロバイダーを管理するレジストリ
     /// </summary>
+    [RequireInitializeSingleton]
     public class SupportedDevicesProviderRegistry : Singleton<SupportedDevicesProviderRegistry>, ISupportedDevicesProviderRegistry
     {
         private ISupportedDevicesProvider _provider;
@@ -11,7 +14,7 @@ namespace TansanMilMil.Util
         /// サポートデバイスプロバイダーを登録
         /// </summary>
         /// <param name="provider">サポートデバイスプロバイダー</param>
-        public void RegisterProvider(ISupportedDevicesProvider provider)
+        public void Initialize(ISupportedDevicesProvider provider)
         {
             _provider = provider;
         }
@@ -22,6 +25,11 @@ namespace TansanMilMil.Util
         /// <returns>サポートデバイスプロバイダー</returns>
         public ISupportedDevicesProvider GetProvider()
         {
+            if (_provider == null)
+            {
+                Debug.LogError("SupportedDevicesProvider is not initialized. Please call Initialize() before using GetProvider().");
+                return null;
+            }
             return _provider;
         }
 

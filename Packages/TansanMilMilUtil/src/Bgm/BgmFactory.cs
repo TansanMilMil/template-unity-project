@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
+using UnityEngine;
 
 namespace TansanMilMil.Util
 {
+    [RequireInitializeSingleton]
     public class BgmFactory : Singleton<BgmFactory>, IBgmFactory
     {
         /// <summary>各BGMのループ範囲を定義する</summary>
@@ -20,7 +22,8 @@ namespace TansanMilMil.Util
             if (musics.Exists(m => m.bgmType == BgmType.NotChangeBgm ||
                 m.bgmType == BgmType.StopBgm))
             {
-                throw new System.ArgumentException("BgmType.NotChangeBgm and BgmType.StopBgm are reserved types and cannot be used in custom BGM definitions.");
+                Debug.LogError("BgmType.NotChangeBgm and BgmType.StopBgm are reserved types and cannot be used in custom BGM definitions.");
+                return;
             }
 
             this.musics.AddRange(musics);

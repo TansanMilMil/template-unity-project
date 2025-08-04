@@ -1,10 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    [RequireInitializeSingleton]
-    public class DefaultTextReplaceStrategy : Singleton<DefaultTextReplaceStrategy>
+    public class DefaultTextReplaceStrategy : Singleton<DefaultTextReplaceStrategy>, IRequireInitialize<List<TextReplaceStrategy>>
     {
         private List<TextReplaceStrategy> strategies = new List<TextReplaceStrategy>();
 
@@ -13,13 +13,17 @@ namespace TansanMilMil.Util
             this.strategies = strategies;
         }
 
-        public IReadOnlyCollection<TextReplaceStrategy> GetDefaultStrategies()
+        public void AssertInitialized()
         {
             if (strategies == null || strategies.Count == 0)
             {
-                Debug.LogError("Default text replace strategies are not initialized. Please call Initialize() before using GetDefaultStrategies().");
-                return new List<TextReplaceStrategy>();
+                throw new InvalidOperationException("DefaultTextReplaceStrategy is not initialized. Please call Initialize() before using this method.");
             }
+        }
+
+        public IReadOnlyCollection<TextReplaceStrategy> GetDefaultStrategies()
+        {
+            AssertInitialized();
 
             return strategies.AsReadOnly();
         }

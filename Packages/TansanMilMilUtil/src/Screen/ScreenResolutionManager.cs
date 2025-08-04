@@ -1,9 +1,9 @@
+using System;
 using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    [RequireInitializeSingleton]
-    public class ScreenResolutionManager : Singleton<ScreenResolutionManager>, IScreenResolutionManager
+    public class ScreenResolutionManager : Singleton<ScreenResolutionManager>, IScreenResolutionManager, IRequireInitialize<PlatformScreenResolutionConfig>
     {
         private PlatformScreenResolutionConfig config;
         private float InitScreenWidth = -1;
@@ -14,13 +14,17 @@ namespace TansanMilMil.Util
             config = resolutionConfig;
         }
 
-        public void ApplyResolutionForCurrentPlatform()
+        public void AssertInitialized()
         {
             if (config == null)
             {
-                Debug.LogError("ScreenResolutionManager is not initialized. Please call Initialize() before using ApplyResolutionForCurrentPlatform().");
-                return;
+                throw new InvalidOperationException("ScreenResolutionManager is not initialized. Please call Initialize() before using this method.");
             }
+        }
+
+        public void ApplyResolutionForCurrentPlatform()
+        {
+            AssertInitialized();
 
             var currentPlatform = UnityEngine.Device.Application.platform;
             ApplyResolutionForPlatform(currentPlatform);
@@ -28,12 +32,6 @@ namespace TansanMilMil.Util
 
         private void ApplyResolutionForPlatform(RuntimePlatform platform)
         {
-            if (config == null)
-            {
-                Debug.LogError("ScreenResolutionManager is not initialized. Please call Initialize() first.");
-                return;
-            }
-
             if (!config.HasResolutionForPlatform(platform))
             {
                 Debug.LogWarning($"No screen resolution configuration found for platform: {platform}. Using default settings.");
@@ -83,11 +81,8 @@ namespace TansanMilMil.Util
 
         public PlatformScreenResolutionConfig GetConfig()
         {
-            if (config == null)
-            {
-                Debug.LogError("ScreenResolutionManager is not initialized. Please call Initialize() before using GetConfig().");
-                return null;
-            }
+            AssertInitialized();
+
             return config;
         }
     }

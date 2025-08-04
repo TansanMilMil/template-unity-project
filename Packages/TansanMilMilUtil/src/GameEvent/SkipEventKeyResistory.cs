@@ -1,9 +1,9 @@
+using System;
 using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    [RequireInitializeSingleton]
-    public class SkipEventKeyResistory : Singleton<SkipEventKeyResistory>, ISkipEventKeyResistory
+    public class SkipEventKeyResistory : Singleton<SkipEventKeyResistory>, ISkipEventKeyResistory, IRequireInitialize<ISkipEventKey>
     {
         private ISkipEventKey skipEventKey;
 
@@ -12,13 +12,17 @@ namespace TansanMilMil.Util
             this.skipEventKey = skipEventKey;
         }
 
-        public ISkipEventKey GetSkipEventKey()
+        public void AssertInitialized()
         {
             if (skipEventKey == null)
             {
-                Debug.LogError("SkipEventKey is not initialized. Please call Initialize() before using GetSkipEventKey().");
-                return null;
+                throw new InvalidOperationException("SkipEventKey is not initialized. Please call Initialize() before using this method.");
             }
+        }
+
+        public ISkipEventKey GetSkipEventKey()
+        {
+            AssertInitialized();
 
             return skipEventKey;
         }

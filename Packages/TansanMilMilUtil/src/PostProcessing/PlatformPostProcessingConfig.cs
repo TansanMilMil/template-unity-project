@@ -4,8 +4,7 @@ using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    [RequireInitializeSingleton]
-    public class PlatformPostProcessingConfig : Singleton<PlatformPostProcessingConfig>, IPlatformPostProcessingConfig
+    public class PlatformPostProcessingConfig : Singleton<PlatformPostProcessingConfig>, IPlatformPostProcessingConfig, IRequireInitialize<List<PlatformPostProcessingItem>>
     {
         private List<PlatformPostProcessingItem> platformPostProcessingSettings = new List<PlatformPostProcessingItem>();
 
@@ -14,13 +13,17 @@ namespace TansanMilMil.Util
             platformPostProcessingSettings = settings;
         }
 
+        public void AssertInitialized()
+        {
+            if (platformPostProcessingSettings == null || platformPostProcessingSettings.Count == 0)
+            {
+                throw new InvalidOperationException("PlatformPostProcessingConfig is not initialized. Please call Initialize() before using this method.");
+            }
+        }
+
         public bool ShouldDisablePostProcessingForPlatform(RuntimePlatform platform)
         {
-            if (platformPostProcessingSettings == null)
-            {
-                Debug.LogError("PlatformPostProcessingConfig is not initialized. Please call Initialize() before using this method.");
-                return false;
-            }
+            AssertInitialized();
 
             var item = platformPostProcessingSettings.Find(x => x.platform == platform);
             return item != null && item.disablePostProcessing;
@@ -28,11 +31,7 @@ namespace TansanMilMil.Util
 
         public bool HasPlatformConfig(RuntimePlatform platform)
         {
-            if (platformPostProcessingSettings == null)
-            {
-                Debug.LogError("PlatformPostProcessingConfig is not initialized. Please call Initialize() before using this method.");
-                return false;
-            }
+            AssertInitialized();
 
             return platformPostProcessingSettings.Exists(x => x.platform == platform);
         }

@@ -1,9 +1,9 @@
+using System;
 using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    [RequireInitializeSingleton]
-    public class FrameRateManager : Singleton<FrameRateManager>, IFrameRateManager
+    public class FrameRateManager : Singleton<FrameRateManager>, IFrameRateManager, IRequireInitialize<PlatformFrameRateConfig>
     {
         private PlatformFrameRateConfig config;
 
@@ -12,13 +12,17 @@ namespace TansanMilMil.Util
             config = frameRateConfig;
         }
 
-        public void ApplyFrameRateForCurrentPlatform()
+        public void AssertInitialized()
         {
             if (config == null)
             {
-                Debug.LogError("FrameRateManager is not initialized. Please call Initialize() before applying frame rate.");
-                return;
+                throw new InvalidOperationException("FrameRateManager has not been initialized. Please call Initialize() before using this method.");
             }
+        }
+
+        public void ApplyFrameRateForCurrentPlatform()
+        {
+            AssertInitialized();
 
             var currentPlatform = UnityEngine.Device.Application.platform;
             ApplyFrameRateForPlatform(currentPlatform);
@@ -26,11 +30,7 @@ namespace TansanMilMil.Util
 
         private void ApplyFrameRateForPlatform(RuntimePlatform platform)
         {
-            if (config == null)
-            {
-                Debug.LogError("FrameRateManager is not initialized.");
-                return;
-            }
+            AssertInitialized();
 
             if (!config.HasPlatformConfig(platform))
             {

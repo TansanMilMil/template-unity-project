@@ -1,10 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    [RequireInitializeSingleton]
-    public class PauseEventsRegistry : Singleton<PauseEventsRegistry>, IPauseEventsRegistry
+    public class PauseEventsRegistry : Singleton<PauseEventsRegistry>, IPauseEventsRegistry, IRequireInitialize<IPauseEvents>
     {
         private readonly List<IPauseEvents> pauseEvents = new List<IPauseEvents>();
 
@@ -16,13 +16,17 @@ namespace TansanMilMil.Util
             }
         }
 
-        public void FireOnPauseEvents()
+        public void AssertInitialized()
         {
             if (pauseEvents.Count == 0)
             {
-                Debug.LogError("No pause events registered. Please call Initialize() before using FireOnPauseEvents().");
-                return;
+                throw new InvalidOperationException("PauseEventsRegistry is not initialized. Please call Initialize() before using this method.");
             }
+        }
+
+        public void FireOnPauseEvents()
+        {
+            AssertInitialized();
 
             foreach (var pauseEvent in pauseEvents)
             {
@@ -32,11 +36,7 @@ namespace TansanMilMil.Util
 
         public void FireOnResumeEvents()
         {
-            if (pauseEvents.Count == 0)
-            {
-                Debug.LogError("No resume events registered. Please call Initialize() before using FireOnResumeEvents().");
-                return;
-            }
+            AssertInitialized();
 
             foreach (var pauseEvent in pauseEvents)
             {

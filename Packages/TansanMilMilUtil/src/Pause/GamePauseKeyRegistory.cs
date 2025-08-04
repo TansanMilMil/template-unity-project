@@ -1,9 +1,9 @@
+using System;
 using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    [RequireInitializeSingleton]
-    public class GamePauseKeyRegistory : Singleton<GamePauseKeyRegistory>, IGamePauseKeyRegistory
+    public class GamePauseKeyRegistory : Singleton<GamePauseKeyRegistory>, IGamePauseKeyRegistory, IRequireInitialize<IGamePauseKey>
     {
         private IGamePauseKey gamePauseKey;
 
@@ -12,13 +12,17 @@ namespace TansanMilMil.Util
             this.gamePauseKey = gamePauseKey;
         }
 
-        public IGamePauseKey GetGamePauseKey()
+        public void AssertInitialized()
         {
             if (gamePauseKey == null)
             {
-                Debug.LogError("GamePauseKeyRegistory is not initialized. Please call Initialize() before using GetGamePauseKey().");
-                return null;
+                throw new InvalidOperationException("GamePauseKey is not initialized. Please call Initialize() before using this method.");
             }
+        }
+
+        public IGamePauseKey GetGamePauseKey()
+        {
+            AssertInitialized();
 
             return gamePauseKey;
         }

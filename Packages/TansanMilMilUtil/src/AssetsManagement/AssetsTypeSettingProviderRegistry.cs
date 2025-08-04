@@ -1,9 +1,9 @@
+using System;
 using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    [RequireInitializeSingleton]
-    public class AssetsTypeSettingRegistry : Singleton<AssetsTypeSettingRegistry>, IAssetsTypeSettingRegistry
+    public class AssetsTypeSettingRegistry : Singleton<AssetsTypeSettingRegistry>, IAssetsTypeSettingRegistry, IRequireInitialize<IAssetsTypeSetting>
     {
         private IAssetsTypeSetting setting;
 
@@ -12,13 +12,17 @@ namespace TansanMilMil.Util
             this.setting = setting;
         }
 
-        public IAssetsTypeSetting GetAssetsTypeSetting()
+        public void AssertInitialized()
         {
             if (setting == null)
             {
-                Debug.LogError("AssetsTypeSetting has not been registered. Please call Initialize() before using GetAssetsTypeSetting().");
-                return null;
+                throw new InvalidOperationException("AssetsTypeSetting has not been initialized. Please call Initialize() before using this method.");
             }
+        }
+
+        public IAssetsTypeSetting GetAssetsTypeSetting()
+        {
+            AssertInitialized();
 
             return setting;
         }

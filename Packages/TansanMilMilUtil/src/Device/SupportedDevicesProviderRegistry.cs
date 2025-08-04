@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace TansanMilMil.Util
@@ -5,8 +6,7 @@ namespace TansanMilMil.Util
     /// <summary>
     /// サポートデバイスプロバイダーを管理するレジストリ
     /// </summary>
-    [RequireInitializeSingleton]
-    public class SupportedDevicesProviderRegistry : Singleton<SupportedDevicesProviderRegistry>, ISupportedDevicesProviderRegistry
+    public class SupportedDevicesProviderRegistry : Singleton<SupportedDevicesProviderRegistry>, ISupportedDevicesProviderRegistry, IRequireInitialize<ISupportedDevicesProvider>
     {
         private ISupportedDevicesProvider _provider;
 
@@ -19,17 +19,22 @@ namespace TansanMilMil.Util
             _provider = provider;
         }
 
+        public void AssertInitialized()
+        {
+            if (_provider == null)
+            {
+                throw new InvalidOperationException("SupportedDevicesProvider is not initialized. Please call Initialize() before using this method.");
+            }
+        }
+
         /// <summary>
         /// 登録されたサポートデバイスプロバイダーを取得
         /// </summary>
         /// <returns>サポートデバイスプロバイダー</returns>
         public ISupportedDevicesProvider GetProvider()
         {
-            if (_provider == null)
-            {
-                Debug.LogError("SupportedDevicesProvider is not initialized. Please call Initialize() before using GetProvider().");
-                return null;
-            }
+            AssertInitialized();
+
             return _provider;
         }
 

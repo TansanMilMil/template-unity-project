@@ -13,7 +13,7 @@ namespace TansanMilMil.Util
         private ILocaleService localeService;
         private bool isInitialized = false;
 
-        protected override void OnSingletonAwake()
+        protected override void OnSingletonStart()
         {
             InitializeService();
             InitializeAsync(this.GetCancellationTokenOnDestroy()).Forget();

@@ -9,22 +9,13 @@ using UnityEngine.Localization.Settings;
 
 namespace TansanMilMil.Util
 {
-    /// <summary>
-    /// ゲーム全体のロケール設定を初期化するコンポーネント
-    /// ジェネリック型のコンポーネントはインスペクタにアタッチできないため、ジェネリック未使用のclassを別途作成してアタッチできるようにしている
-    /// </summary>
-    [DefaultExecutionOrder(-10)]
-    public class GameLocaleInitializer : GameLocaleInitializer<object, object>
-    {
-    }
-
     public class GameLocaleInitializer<StoreKey, StoreValue> : SingletonMonoBehaviour<GameLocaleInitializer<StoreKey, StoreValue>>
     {
         private IPlayerConfigManager playerConfigManager => PlayerConfigManager.GetInstance();
         private ILocaleManager localeManager => LocaleManager.GetInstance();
         private IConfigSaveDataManager<StoreKey, StoreValue> configSaveDataManager => ConfigSaveDataManager<StoreKey, StoreValue>.GetInstance();
 
-        private void Awake()
+        private void Start()
         {
             InitGameLocaleAsync(this.GetCancellationTokenOnDestroy()).Forget();
         }

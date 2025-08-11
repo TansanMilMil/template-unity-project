@@ -89,7 +89,7 @@ namespace TansanMilMil.Util
                         // ルート階層にないとDontDestroyOnLoadできないので強制移動させる
                         if (gameObject.transform.parent != null)
                         {
-                            gameObject.transform.parent = null;
+                            gameObject.transform.SetParent(null);
                         }
                         DontDestroyOnLoad(gameObject);
                     }

@@ -4,7 +4,7 @@ namespace TansanMilMil.Util
 {
     public class PlayerConfigManager : Singleton<PlayerConfigManager>, IPlayerConfigManager
     {
-        private PlayerConfig config;
+        private PlayerConfig config = new PlayerConfig();
 
         public PlayerConfig GetConfig()
         {

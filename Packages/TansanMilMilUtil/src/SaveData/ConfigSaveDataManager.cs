@@ -5,14 +5,6 @@ using UnityEngine;
 
 namespace TansanMilMil.Util
 {
-    /// <summary>
-    /// ジェネリック型のコンポーネントはインスペクタにアタッチできないため、ジェネリック未使用のclassを別途作成してアタッチできるようにしている
-    /// </summary>
-    [DefaultExecutionOrder(-10)]
-    public class ConfigSaveDataManager : ConfigSaveDataManager<object, object>
-    {
-    }
-
     public class ConfigSaveDataManager<StoreKey, StoreValue> : SingletonMonoBehaviour<ConfigSaveDataManager<StoreKey, StoreValue>>, IConfigSaveDataManager<StoreKey, StoreValue>
     {
         private Subject<bool> _loadCompleted = new Subject<bool>();

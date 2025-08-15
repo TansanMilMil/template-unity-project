@@ -8,7 +8,18 @@ namespace TemplateUnityProject
     {
         protected override void OnSingletonStart()
         {
-            InitializationBootstrapper.Initialize();
+            Debug.Log("Starting project initialization... -------------------------");
+
+            ScreenResolutionManagerInitializer.Initialize();
+            FrameRateManagerInitializer.Initialize();
+            BgmFactoryInitializer.Initialize();
+            ConfigSaveDataStoreRegistryInitializer.Initialize();
+            DefaultTextReplaceStrategyInitializer.Initialize();
+            AssetsTypeSettingRegistryInitializer.Initialize();
+            GamePauseKeyRegistoryInitializer.Initialize();
+
+            Debug.Log("Project initialization completed -------------------------");
+
             Destroy(gameObject);
         }
     }

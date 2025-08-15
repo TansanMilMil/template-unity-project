@@ -1,7 +1,8 @@
 fileFormatVersion: 2
-guid: de72152792007324cac5b9fc3586185b
-TextScriptImporter:
-  externalObjects: {}
+guid: 0a8eaaa2a9e529b4cb5dae00c01d6d01
+timeCreated: 1466772710
+licenseType: Store
+DefaultImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
@@ -10,5 +11,5 @@ AssetOrigin:
   productId: 143526
   packageName: Rainbow Folders 2
   packageVersion: 2.4.3
-  assetPath: Assets/Plugins/Borodar/RainbowFolders/NOTICES.txt
+  assetPath: Assets/Plugins/Borodar/RainbowFolders/Demo/Terrains/stub.file
   uploadId: 776001

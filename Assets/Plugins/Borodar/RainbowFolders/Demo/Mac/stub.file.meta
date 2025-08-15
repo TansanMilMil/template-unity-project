@@ -1,7 +1,8 @@
 fileFormatVersion: 2
-guid: de72152792007324cac5b9fc3586185b
-TextScriptImporter:
-  externalObjects: {}
+guid: 22623a7501608ea4ca88816f5c2f2423
+timeCreated: 1456142802
+licenseType: Store
+DefaultImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
@@ -10,5 +11,5 @@ AssetOrigin:
   productId: 143526
   packageName: Rainbow Folders 2
   packageVersion: 2.4.3
-  assetPath: Assets/Plugins/Borodar/RainbowFolders/NOTICES.txt
+  assetPath: Assets/Plugins/Borodar/RainbowFolders/Demo/Mac/stub.file
   uploadId: 776001

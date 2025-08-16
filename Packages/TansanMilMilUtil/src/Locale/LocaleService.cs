@@ -120,15 +120,13 @@ namespace TansanMilMil.Util
 
         public void SetLocale(string cultureInfoName)
         {
-            if (string.IsNullOrWhiteSpace(cultureInfoName))
-                throw new ArgumentException("CultureInfoName cannot be null or whitespace", nameof(cultureInfoName));
-
             Locale locale = localeRegistry.GetLocaleBy(cultureInfoName);
 
             if (locale == null)
             {
-                Debug.LogError($"Locale with culture info '{cultureInfoName}' not found. Available locales: {string.Join(", ", GetAvailableLocales())}. Falling back to default locale.");
+                Debug.LogWarning($"Locale with culture info '{cultureInfoName}' not found. Available locales: {string.Join(", ", GetAvailableLocales())}. Falling back to default locale.");
                 locale = localeRegistry.GetDefaultLocale();
+                Debug.LogWarning($"Falling back to default locale: {locale?.Identifier.CultureInfo.Name}");
 
                 if (locale == null)
                 {

@@ -1,6 +1,6 @@
 {
     "name": "com.tansanmilmil.tansanmilmilutil",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "displayName": "TansanMilMilUtil",
     "description": "A utility library created by TansanMilMil.",
     "unity": "2020.3",
@@ -9,7 +9,7 @@
         "email": "tmdev2929@gmail.com",
         "url": "https://x.com/heberekeT"
     },
-    "changelogUrl": "https://github.com/TansanMilMil/template-unity-project/releases/tag/util_v1.2.0",
+    "changelogUrl": "https://github.com/TansanMilMil/template-unity-project/releases/tag/util_v1.3.0",
     "keywords": [
         "library",
         "example"

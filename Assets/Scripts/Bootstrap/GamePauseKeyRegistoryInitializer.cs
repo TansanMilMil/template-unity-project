@@ -6,9 +6,9 @@ namespace TemplateUnityProject
 {
     public static class GamePauseKeyRegistoryInitializer
     {
-        public static void Initialize()
+        public static void Initialize(InputActionReference pauseAction)
         {
-            var gamePauseKey = new InputSystemGamePauseKey();
+            var gamePauseKey = new InputSystemGamePauseKey(pauseAction);
             GamePauseKeyRegistory.GetInstance().Initialize(gamePauseKey);
 
             Debug.Log("GamePauseKeyRegistory initialized with Input System pause key (Escape)");
@@ -16,17 +16,22 @@ namespace TemplateUnityProject
 
         public class InputSystemGamePauseKey : IGamePauseKey
         {
-            private InputAction pauseAction;
+            private InputActionReference pauseAction;
 
-            public InputSystemGamePauseKey()
+            public InputSystemGamePauseKey(InputActionReference pauseAction)
             {
-                pauseAction = new InputAction("Pause", InputActionType.Button, "<Keyboard>/escape");
-                pauseAction.Enable();
+                this.pauseAction = pauseAction;
+                this.pauseAction.action.Enable();
+            }
+
+            ~InputSystemGamePauseKey()
+            {
+                pauseAction.action.Disable();
             }
 
             public bool GetKeyDown()
             {
-                return pauseAction.WasPressedThisFrame();
+                return pauseAction.action.WasPressedThisFrame();
             }
         }
     }

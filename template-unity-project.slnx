@@ -1,0 +1,13 @@
+﻿<Solution>
+  <Project Path="Febucci.TextAnimator.Runtime.csproj" />
+  <Project Path="TansanMilMilUtil.csproj" />
+  <Project Path="Febucci.TextAnimator.Editor.csproj" />
+  <Project Path="Febucci.Attributes.Editor.csproj" />
+  <Project Path="DOTween.Modules.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Febucci.TextAnimator.TMP.Runtime.csproj" />
+  <Project Path="DOTweenPro.EditorScripts.csproj" />
+  <Project Path="Febucci.TextAnimator.Demo.Runtime.csproj" />
+  <Project Path="Febucci.Attributes.Runtime.csproj" />
+  <Project Path="DOTweenPro.Scripts.csproj" />
+</Solution>

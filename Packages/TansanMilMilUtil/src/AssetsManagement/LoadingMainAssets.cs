@@ -10,7 +10,6 @@ namespace TansanMilMil.Util
     {
         public AssetLabelReference addressableLabelInitLoad;
         public static string NextSceneName = null;
-        [SerializeField]
         public event Action funcAfterLoading;
         public GameObject loadingText;
 

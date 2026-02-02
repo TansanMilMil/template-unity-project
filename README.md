@@ -22,7 +22,7 @@
 
 import from below git URL in Unity Package Manager
 
-`https://github.com/TansanMilMil/template-unity-project.git?path=Packages/TansanMilMilUtil#util_latest`
+`https://github.com/TansanMilMil/template-unity-project.git?path=Packages/TansanMilMilUtil`
 
 ---
 

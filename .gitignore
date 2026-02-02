@@ -77,3 +77,5 @@ Recordings/
 .swp
 dist/
 /[Aa]ssets/[Pp]ackages/
+
+.claude/

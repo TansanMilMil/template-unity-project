@@ -1,0 +1,120 @@
+name: Release Unity Package
+
+on:
+  push:
+    tags:
+      - 'util_v*'
+
+permissions:
+  contents: write  # Required to create GitHub Release
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for tag comparison
+
+      - name: Extract version from tag
+        id: extract_version
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          VERSION=${TAG_NAME#util_v}
+          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Extracted version: $VERSION from tag: $TAG_NAME"
+
+      - name: Find previous version tag
+        id: previous_tag
+        run: |
+          # Get all util_v* tags, sort them, and get the one before current
+          CURRENT_TAG="${{ steps.extract_version.outputs.tag_name }}"
+          PREVIOUS_TAG=$(git tag -l 'util_v*' | grep -v "$CURRENT_TAG" | sort -V | tail -n 1)
+
+          if [ -z "$PREVIOUS_TAG" ]; then
+            echo "No previous tag found, using first commit"
+            PREVIOUS_TAG=$(git rev-list --max-parents=0 HEAD)
+          fi
+
+          echo "previous_tag=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
+          echo "Previous tag/commit: $PREVIOUS_TAG"
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          PREVIOUS_TAG="${{ steps.previous_tag.outputs.previous_tag }}"
+          CURRENT_TAG="${{ steps.extract_version.outputs.tag_name }}"
+
+          echo "Generating changelog from $PREVIOUS_TAG to $CURRENT_TAG..."
+
+          # Format commit log
+          CHANGELOG=$(git log $PREVIOUS_TAG..$CURRENT_TAG \
+            --pretty=format:"- %s (%h)" \
+            --no-merges)
+
+          # Use multiline output with delimiter
+          {
+            echo "changelog<<EOF"
+            echo "$CHANGELOG"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: Read package.json info
+        id: package_info
+        run: |
+          cd Packages/TansanMilMilUtil
+          PACKAGE_NAME=$(jq -r '.displayName' package.json)
+          DESCRIPTION=$(jq -r '.description' package.json)
+
+          echo "package_name=$PACKAGE_NAME" >> $GITHUB_OUTPUT
+          echo "description=$DESCRIPTION" >> $GITHUB_OUTPUT
+          echo "Package: $PACKAGE_NAME"
+          echo "Description: $DESCRIPTION"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG_NAME="${{ steps.extract_version.outputs.tag_name }}"
+          VERSION="${{ steps.extract_version.outputs.version }}"
+          PACKAGE_NAME="${{ steps.package_info.outputs.package_name }}"
+          DESCRIPTION="${{ steps.package_info.outputs.description }}"
+          CHANGELOG="${{ steps.changelog.outputs.changelog }}"
+
+          # Create release notes
+          RELEASE_NOTES=$(cat <<EOF
+# ${PACKAGE_NAME} v${VERSION}
+
+${DESCRIPTION}
+
+## What's Changed
+
+${CHANGELOG}
+
+## Installation
+
+Add this package to your Unity project via Package Manager:
+
+\`\`\`
+https://github.com/TansanMilMil/template-unity-project.git?path=Packages/TansanMilMilUtil#${TAG_NAME}
+\`\`\`
+
+Or use the latest version:
+
+\`\`\`
+https://github.com/TansanMilMil/template-unity-project.git?path=Packages/TansanMilMilUtil#util_latest
+\`\`\`
+EOF
+          )
+
+          # Create release using GitHub CLI
+          gh release create "$TAG_NAME" \
+            --title "${PACKAGE_NAME} v${VERSION}" \
+            --notes "$RELEASE_NOTES"
+
+          echo "✓ GitHub Release created successfully!"
+          echo "View at: https://github.com/TansanMilMil/template-unity-project/releases/tag/${TAG_NAME}"
